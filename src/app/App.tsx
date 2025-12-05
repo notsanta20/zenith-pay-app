@@ -1,8 +1,12 @@
-import { Button } from "../components/ui/button";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import Router from "./Router";
 
 function App() {
-  return <Router />;
+  return (
+    <ThemeProvider>
+      <Router />
+    </ThemeProvider>
+  );
 }
 
 export default App;
