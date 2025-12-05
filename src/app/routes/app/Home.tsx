@@ -1,11 +1,12 @@
-import Sidebar from "@/components/custom/Sidebar";
+import AppSidebar from "@/components/custom/AppSidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 function Home() {
   return (
-    <main className="grid grid-cols-[150px_1fr] h-dvh">
-      <Sidebar />
-      <section className="bg-amber-100">section</section>
-    </main>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset className="px-5 py-5 flex flex-col"></SidebarInset>
+    </SidebarProvider>
   );
 }
 
