@@ -12,4 +12,9 @@ function formatDate(date: string) {
   return formattedDate;
 }
 
-export { getCurrentDate, formatDate };
+function formatLoginDate(date: string) {
+  const formattedDate: string = format(new Date(date), "MMM dd, yyyy");
+  return formattedDate;
+}
+
+export { getCurrentDate, formatDate, formatLoginDate };
