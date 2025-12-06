@@ -25,37 +25,37 @@ import { ModeToggle } from "../ModeToggle";
 const items = [
   {
     title: "Dashboard",
-    url: "/home",
+    url: "/app",
     icon: Home,
   },
   {
     title: "Transfer",
-    url: "/transfer",
+    url: "/app/transfer",
     icon: SendHorizonal,
   },
   {
     title: "Transactions",
-    url: "/transactions",
+    url: "/app/transactions",
     icon: Layers,
   },
   {
     title: "Bill Pay",
-    url: "/bill-pay",
+    url: "/app/bill-pay",
     icon: BadgeIndianRupee,
   },
   {
     title: "Accounts",
-    url: "/accounts",
+    url: "/app/accounts",
     icon: CreditCard,
   },
   {
     title: "Notifications",
-    url: "/notifications",
+    url: "/app/notifications",
     icon: Bell,
   },
   {
     title: "Profile",
-    url: "/profile",
+    url: "/app/profile",
     icon: ShieldUser,
   },
 ];
