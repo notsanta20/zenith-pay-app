@@ -16,7 +16,13 @@ export interface registerFormRequest {
 }
 
 export interface userProfileFormType {
-  fullname: string;
+  userId: string;
+  fullName: string;
   dob: string;
   phone: string;
+}
+
+export interface userIdContext {
+  userId: string;
+  setUserId: React.Dispatch<React.SetStateAction<string>>;
 }
