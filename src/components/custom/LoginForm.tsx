@@ -1,12 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -28,10 +23,12 @@ import type { loginFormType } from "@/types/types";
 import { loginApi } from "@/apis/postRequests";
 import type { AxiosResponse } from "axios";
 import { Spinner } from "../ui/spinner";
+import { useContext } from "react";
+import { UserIdContext } from "@/context/context";
 
 export function LoginForm() {
   const navigate = useNavigate();
-
+  const userId = useContext(UserIdContext);
   const login = useMutation({
     mutationKey: ["login"],
     mutationFn: (data: loginFormType) => {
@@ -41,7 +38,12 @@ export function LoginForm() {
       toast.error(error.response.data.message);
     },
     onSuccess: (data: AxiosResponse) => {
-      navigate("/create-profile", { replace: true });
+      if (data.data.active) {
+        navigate("/app", { replace: true });
+      } else {
+        userId?.setUserId(data.data.userId);
+        navigate("/create-profile", { replace: true });
+      }
     },
   });
 
