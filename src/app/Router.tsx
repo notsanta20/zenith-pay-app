@@ -6,6 +6,7 @@ import Register from "./routes/auth/Register";
 import Dashboard from "./routes/app/Dashboard";
 import Transfer from "./routes/app/Transfer";
 import Transactions from "./routes/app/Transactions";
+import CreateProfile from "./routes/app/CreateProfile";
 
 function Router() {
   return (
@@ -14,6 +15,7 @@ function Router() {
         <Route path="/" element={<Landing />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/create-profile" element={<CreateProfile />} />
         <Route path="/app" element={<Home />}>
           <Route index element={<Dashboard />} />
           <Route path="transfer" element={<Transfer />} />
