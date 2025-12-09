@@ -46,12 +46,12 @@ export const registerFormSchema = z
 export const userProfileFormSchema = z.object({
   fullname: z
     .string({ error: "enter valid name" })
-    .min(5, { error: "fullname must be at least 8 characters" })
+    .min(5, { error: "fullname must be at least 5 characters" })
     .max(30, { error: "fullname must not exceed 30 characters" }),
   dob: z
-    .date()
-    .min(new Date("2007-01-01"), { error: "Must be at least 18 years old" })
-    .max(new Date("1920-01-01"), { error: "Too old" }),
+    .date({ error: "select date of birth" })
+    .min(new Date("1920-01-01"), { error: "Too old" })
+    .max(new Date("2007-01-01"), { error: "Must be at least 18 years old" }),
   phone: z
     .string({ error: "enter valid phone number" })
     .length(10, { error: "phone number must be 10 numbers" }),
