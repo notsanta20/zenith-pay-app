@@ -7,25 +7,23 @@ import { SidebarInset } from "@/components/ui/sidebar";
 function Dashboard() {
   return (
     <SidebarInset className="px-5 py-5 flex flex-col min-w-0 hover:cursor-default">
-      <SiteHeader
-        heading="Welcome back,"
-        name="santa"
-        lastLogin="2025-12-02 06:55:26.957"
-      />
+      <SiteHeader heading="Welcome back," name="santa" />
       <main className="flex-auto flex flex-col py-25 gap-30">
         <div className="flex flex-col gap-5">
           <SimpleHeading text="Balance" />
-          <span
-            className="font-(family-name:--dm-serif) text-6xl"
-            onMouseOver={(e) => {
-              e.target.textContent = "₹12,28,843.41";
-            }}
-            onMouseOut={(e) => {
-              e.target.textContent = "(╥﹏╥)";
-            }}
-          >
-            (⌐■_■)
-          </span>
+          <div>
+            <span
+              className="font-(family-name:--dm-serif) text-6xl"
+              onMouseOver={(e) => {
+                e.target.textContent = "₹12,28,843.41";
+              }}
+              onMouseOut={(e) => {
+                e.target.textContent = "(╥﹏╥)";
+              }}
+            >
+              (⌐■_■)
+            </span>
+          </div>
         </div>
         <div className="flex flex-col gap-5">
           <SimpleHeading text="Accounts" />
