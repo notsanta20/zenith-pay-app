@@ -26,7 +26,8 @@ import { Spinner } from "../ui/spinner";
 
 export function RegisterForm() {
   const navigate = useNavigate();
-  const register = useMutation({
+
+  const registerQuery = useMutation({
     mutationKey: ["register"],
     mutationFn: (data: registerFormRequest) => {
       return registerApi(data);
@@ -57,7 +58,7 @@ export function RegisterForm() {
         isAdmin: false,
       };
 
-      register.mutate(data);
+      registerQuery.mutate(data);
     },
   });
 
@@ -156,7 +157,7 @@ export function RegisterForm() {
       <CardFooter>
         <Field>
           <Button type="submit" form="register-form">
-            {register.isPending ? <Spinner /> : "Sign up"}
+            {registerQuery.isPending ? <Spinner /> : "Sign up"}
           </Button>
           <FieldDescription className="text-center">
             Don&apos;t have an account? <a href="/login">login</a>
