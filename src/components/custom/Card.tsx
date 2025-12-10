@@ -7,7 +7,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
+        SAVINGS:
           "bg-gradient-to-b from-(--card-green-from) to-(--card-green-to)",
         orange:
           "bg-gradient-to-b from-(--card-orange-from) to-(--card-orange-to)",
@@ -25,7 +25,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 interface cardProps extends VariantProps<typeof buttonVariants> {
@@ -53,21 +53,23 @@ function Card(prop: cardProps) {
           <span>Balance</span>
           <span>{convertedBalance}</span>
         </div>
-        <div className="flex flex-col gap-1">
-          <span>Outstanding</span>
-          <span>{convertedOutstanding}</span>
-        </div>
+        {outstanding && (
+          <div className="flex flex-col gap-1">
+            <span>Outstanding</span>
+            <span>{convertedOutstanding}</span>
+          </div>
+        )}
       </div>
       <span
         className="font-(family-name:--space-mono) text-(--card-text-sec)"
         onMouseOver={(e) => {
-          e.target.textContent = "*** *** " + accountNumber;
+          e.target.textContent = "**** **** " + accountNumber;
         }}
         onMouseOut={(e) => {
-          e.target.textContent = "*** *** ****";
+          e.target.textContent = "**** **** ****";
         }}
       >
-        *** *** ****
+        **** **** ****
       </span>
     </div>
   );
