@@ -43,8 +43,8 @@ export function UserProfileForm() {
     }
   }, []);
 
-  const userProfile = useMutation({
-    mutationKey: ["setUserProfile"],
+  const userProfileQuery = useMutation({
+    mutationKey: ["set-user-profile"],
     mutationFn: (data: userProfileFormType) => {
       return updateUserProfileApi(data);
     },
@@ -74,7 +74,7 @@ export function UserProfileForm() {
           phone: value.phone,
         };
 
-        userProfile.mutate(data);
+        userProfileQuery.mutate(data);
       }
     },
   });
@@ -195,7 +195,7 @@ export function UserProfileForm() {
       <CardFooter>
         <Field>
           <Button type="submit" form="user-profile-form">
-            {userProfile.isPending ? <Spinner /> : "Create profile"}
+            {userProfileQuery.isPending ? <Spinner /> : "Create profile"}
           </Button>
         </Field>
       </CardFooter>
