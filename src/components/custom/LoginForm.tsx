@@ -29,7 +29,8 @@ import { UserIdContext } from "@/context/context";
 export function LoginForm() {
   const navigate = useNavigate();
   const userId = useContext(UserIdContext);
-  const login = useMutation({
+
+  const loginQuery = useMutation({
     mutationKey: ["login"],
     mutationFn: (data: loginFormType) => {
       return loginApi(data);
@@ -38,10 +39,10 @@ export function LoginForm() {
       toast.error(error.response.data.message);
     },
     onSuccess: (data: AxiosResponse) => {
+      userId?.setUserId(data.data.userId);
       if (data.data.active) {
         navigate("/app", { replace: true });
       } else {
-        userId?.setUserId(data.data.userId);
         navigate("/create-profile", { replace: true });
       }
     },
@@ -56,7 +57,7 @@ export function LoginForm() {
       onSubmit: loginFormSchema,
     },
     onSubmit: async ({ value }) => {
-      login.mutate(value);
+      loginQuery.mutate(value);
     },
   });
 
@@ -129,7 +130,7 @@ export function LoginForm() {
       <CardFooter>
         <Field>
           <Button type="submit" form="login-form">
-            {login.isPending ? <Spinner /> : "Login"}
+            {loginQuery.isPending ? <Spinner /> : "Login"}
           </Button>
           <FieldDescription className="text-center">
             Don&apos;t have an account? <a href="/register">Sign up</a>
