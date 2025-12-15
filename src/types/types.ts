@@ -26,3 +26,10 @@ export interface userIdContext {
   userId: string;
   setUserId: React.Dispatch<React.SetStateAction<string>>;
 }
+
+export interface createAccountFormType {
+  userId: string;
+  accountName: string;
+  accountType: string;
+  balance: number;
+}
