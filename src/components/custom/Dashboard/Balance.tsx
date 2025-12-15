@@ -13,12 +13,8 @@ export default function Balance() {
   const totalBalanceQuery = useQuery({
     queryKey: ["total-balance"],
     queryFn: async () => {
-      if (userId) {
-        const data = await getTotalBalance(
-          "43accbfc-8922-4b40-9151-cf750feab67d",
-        );
-        return data;
-      }
+      const data = await getTotalBalance(userId!.userId);
+      return data;
     },
     retry: false,
   });
