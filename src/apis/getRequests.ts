@@ -1,25 +1,23 @@
 import axios from "axios";
 
-const authURL: string = "http://localhost:8081/auth";
-const profileURL: string = "http://localhost:8082/profile";
-const accountURL: string = "http://localhost:8083/accounts";
+const URL: string = import.meta.env.VITE_BACKEND_SERVER_URL;
 
 export async function getUserProfile(userId: string) {
-  const data = await axios.get(profileURL + "/me/" + userId);
+  const data = await axios.get(URL + "/profile/me/" + userId);
 
   return data;
 }
 
 export async function getTotalBalance(userId: string) {
   const data = await axios.get(
-    accountURL + "/user/" + userId + "/total-balance",
+    URL + "/accounts/user/" + userId + "/total-balance",
   );
 
   return data;
 }
 
 export async function getAllAccounst(userId: string) {
-  const data = await axios.get(accountURL + "/user/" + userId);
+  const data = await axios.get(URL + "/accounts/user/" + userId);
 
   return data;
 }
