@@ -56,3 +56,19 @@ export const userProfileFormSchema = z.object({
     .string({ error: "enter valid phone number" })
     .length(10, { error: "phone number must be 10 numbers" }),
 });
+
+const accountTypeEnum = z.enum(["SAVINGS", "CURRENT", "CREDIT"], {
+  error: "Select valid option",
+});
+
+export const createAccountFormSchema = z.object({
+  accountName: z
+    .string({ error: "enter valid account name" })
+    .min(3, { error: "account name must be at least 3 characters" })
+    .max(15, { error: "account name must not exceed 15 characters" }),
+  accountType: accountTypeEnum,
+  balance: z.coerce
+    .number({ error: "enter valid balance" })
+    .nonnegative({ error: "Balance should not be negative" })
+    .min(1, { error: "balance need to be atleast 1" }),
+});
