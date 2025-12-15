@@ -7,6 +7,7 @@ import Dashboard from "./routes/app/Dashboard";
 import Transfer from "./routes/app/Transfer";
 import Transactions from "./routes/app/Transactions";
 import CreateProfile from "./routes/app/CreateProfile";
+import CreateAccount from "./routes/app/CreateAccount";
 
 function Router() {
   return (
@@ -16,6 +17,7 @@ function Router() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/create-profile" element={<CreateProfile />} />
+        <Route path="/create-account" element={<CreateAccount />} />
         <Route path="/app" element={<Home />}>
           <Route index element={<Dashboard />} />
           <Route path="transfer" element={<Transfer />} />
