@@ -31,6 +31,7 @@ import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 import { UserIdContext } from "@/context/context";
+import type { AxiosResponse } from "axios";
 
 export function UserProfileForm() {
   const [open, setOpen] = useState(false);
@@ -41,7 +42,7 @@ export function UserProfileForm() {
     if (userId?.userId == "") {
       navigate("/login", { replace: true });
     }
-  }, []);
+  });
 
   const userProfileQuery = useMutation({
     mutationKey: ["set-user-profile"],
@@ -51,8 +52,12 @@ export function UserProfileForm() {
     onError: (error: any) => {
       toast.error(error.response.data.message);
     },
-    onSuccess: () => {
-      navigate("/app", { replace: true });
+    onSuccess: (data: AxiosResponse) => {
+      if (data.data.kycStatus) {
+        navigate("/app", { replace: true });
+      } else {
+        navigate("/create-account", { replace: true });
+      }
     },
   });
 

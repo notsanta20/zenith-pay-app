@@ -35,7 +35,7 @@ export function LoginForm() {
     mutationFn: (data: loginFormType) => {
       return loginApi(data);
     },
-    onError: (error: any) => {
+    onError: (error) => {
       toast.error(error.response.data.message);
     },
     onSuccess: (data: AxiosResponse) => {
