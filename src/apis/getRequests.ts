@@ -1,21 +1,31 @@
 import { axiosInstance } from "./apiConfig";
 
-export async function getUserProfile(userId: string) {
-  const data = await axiosInstance.get("/profile/me/" + userId);
+export async function verifyUserApi() {
+  const data = await axiosInstance.get("/auth/verify");
 
   return data;
 }
 
-export async function getTotalBalance(userId: string) {
-  const data = await axiosInstance.get(
-    "/accounts/user/" + userId + "/total-balance",
-  );
+export async function getUserProfile() {
+  const data = await axiosInstance.get("/profile/me/");
 
   return data;
 }
 
-export async function getAllAccounst(userId: string) {
-  const data = await axiosInstance.get("/accounts/user/" + userId);
+export async function getTotalBalance() {
+  const data = await axiosInstance.get("/accounts/user/total-balance");
+
+  return data;
+}
+
+export async function getAllAccounts() {
+  const data = await axiosInstance.get("/accounts/all-accounts");
+
+  return data;
+}
+
+export async function getUserBootstrap() {
+  const data = await axiosInstance.get("/auth/user/bootstrap");
 
   return data;
 }
