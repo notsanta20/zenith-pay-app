@@ -8,6 +8,7 @@ import Transfer from "./routes/app/Transfer";
 import Transactions from "./routes/app/Transactions";
 import CreateProfile from "./routes/app/CreateProfile";
 import CreateAccount from "./routes/app/CreateAccount";
+import ProtectedRoute from "@/components/custom/ProtectedRoute";
 
 function Router() {
   return (
@@ -16,12 +17,15 @@ function Router() {
         <Route path="/" element={<Landing />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/create-profile" element={<CreateProfile />} />
-        <Route path="/create-account" element={<CreateAccount />} />
-        <Route path="/app" element={<Home />}>
-          <Route index element={<Dashboard />} />
-          <Route path="transfer" element={<Transfer />} />
-          <Route path="transactions" element={<Transactions />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/create-profile" element={<CreateProfile />} />
+          <Route path="/create-account" element={<CreateAccount />} />
+          <Route path="/app" element={<Home />}>
+            <Route index element={<Dashboard />} />
+            <Route path="transfer" element={<Transfer />} />
+            <Route path="transactions" element={<Transactions />} />
+          </Route>
         </Route>
       </Routes>
     </>
