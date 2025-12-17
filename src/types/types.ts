@@ -16,20 +16,36 @@ export interface registerFormRequest {
 }
 
 export interface userProfileFormType {
-  userId: string;
   fullName: string;
   dob: string;
   phone: string;
 }
 
-export interface userIdContext {
-  userId: string;
-  setUserId: React.Dispatch<React.SetStateAction<string>>;
+export const onBoardType = {
+  login: "LOGIN",
+  profile: "PROFILE",
+  account: "ACCOUNT",
+  app: "APP",
+} as const;
+
+export interface AuthContextValue {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  onBoard: string;
+  username: string | null;
+  lastLogin: string | null;
 }
 
 export interface createAccountFormType {
-  userId: string;
   accountName: string;
   accountType: string;
+  balance: number;
+}
+
+export interface transactAccount {
+  accountId: string;
+  accountName: string;
+  accountNumber: string;
+  accountStatus: string;
   balance: number;
 }
