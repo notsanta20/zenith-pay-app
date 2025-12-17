@@ -1,19 +1,15 @@
-import { useContext, type MouseEvent } from "react";
+import { type MouseEvent } from "react";
 import SimpleHeading from "../SimpleHeading";
-import type { userIdContext } from "@/types/types";
-import { UserIdContext } from "@/context/context";
 import { useQuery } from "@tanstack/react-query";
 import { getTotalBalance } from "@/apis/getRequests";
 import { toast } from "sonner";
 import { formatCurrency } from "@/utils/formatCurrency";
 
 export default function Balance() {
-  const userId: userIdContext | undefined = useContext(UserIdContext);
-
   const totalBalanceQuery = useQuery({
     queryKey: ["total-balance"],
     queryFn: async () => {
-      const data = await getTotalBalance(userId!.userId);
+      const data = await getTotalBalance();
       return data;
     },
     retry: false,

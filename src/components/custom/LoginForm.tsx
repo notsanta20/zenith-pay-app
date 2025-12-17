@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -21,14 +21,11 @@ import { loginFormSchema } from "@/schemas/formSchemas";
 import { toast } from "sonner";
 import type { loginFormType } from "@/types/types";
 import { loginApi } from "@/apis/postRequests";
-import type { AxiosResponse } from "axios";
 import { Spinner } from "../ui/spinner";
-import { useContext } from "react";
-import { UserIdContext } from "@/context/context";
 
 export function LoginForm() {
   const navigate = useNavigate();
-  const userId = useContext(UserIdContext);
+  const queryClient = useQueryClient();
 
   const loginQuery = useMutation({
     mutationKey: ["login"],
@@ -38,13 +35,11 @@ export function LoginForm() {
     onError: (error) => {
       toast.error(error.response.data.message);
     },
-    onSuccess: (data: AxiosResponse) => {
-      userId?.setUserId(data.data.userId);
-      if (data.data.active) {
-        navigate("/app", { replace: true });
-      } else {
-        navigate("/create-profile", { replace: true });
-      }
+    onSuccess: () => {
+      queryClient.refetchQueries({
+        queryKey: ["verify-user"],
+      });
+      navigate("/app", { replace: true });
     },
   });
 

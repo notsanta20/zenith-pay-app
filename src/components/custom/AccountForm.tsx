@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -29,19 +29,11 @@ import { createAccountFormSchema } from "@/schemas/formSchemas";
 import { toast } from "sonner";
 import type { createAccountFormType } from "@/types/types";
 import { Spinner } from "../ui/spinner";
-import { useContext, useEffect } from "react";
-import { UserIdContext } from "@/context/context";
 import { createAccountApi } from "@/apis/postRequests";
 
 export function AccountForm() {
-  const userId = useContext(UserIdContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (userId?.userId == "") {
-      navigate("/login", { replace: true });
-    }
-  });
+  const queryClient = useQueryClient();
 
   const userProfileQuery = useMutation({
     mutationKey: ["create-account"],
@@ -52,6 +44,9 @@ export function AccountForm() {
       toast.error(error.response.data.message);
     },
     onSuccess: () => {
+      queryClient.refetchQueries({
+        queryKey: ["verify-user"],
+      });
       navigate("/app", { replace: true });
     },
   });
@@ -66,18 +61,13 @@ export function AccountForm() {
       onSubmit: createAccountFormSchema,
     },
     onSubmit: async ({ value }) => {
-      if (userId) {
-        const data: createAccountFormType = {
-          userId: userId.userId,
-          accountName: value.accountName,
-          accountType: value.accountType,
-          balance: value.balance,
-        };
+      const data: createAccountFormType = {
+        accountName: value.accountName,
+        accountType: value.accountType,
+        balance: value.balance,
+      };
 
-        userProfileQuery.mutate(data);
-
-        console.log(data);
-      }
+      userProfileQuery.mutate(data);
     },
   });
 

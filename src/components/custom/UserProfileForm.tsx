@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -26,23 +26,16 @@ import { toast } from "sonner";
 import type { userProfileFormType } from "@/types/types";
 import { Spinner } from "../ui/spinner";
 import { updateUserProfileApi } from "@/apis/putRequests";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
-import { UserIdContext } from "@/context/context";
 import type { AxiosResponse } from "axios";
 
 export function UserProfileForm() {
   const [open, setOpen] = useState(false);
-  const userId = useContext(UserIdContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (userId?.userId == "") {
-      navigate("/login", { replace: true });
-    }
-  });
+  const queryClient = useQueryClient();
 
   const userProfileQuery = useMutation({
     mutationKey: ["set-user-profile"],
@@ -53,11 +46,10 @@ export function UserProfileForm() {
       toast.error(error.response.data.message);
     },
     onSuccess: (data: AxiosResponse) => {
-      if (data.data.kycStatus) {
-        navigate("/app", { replace: true });
-      } else {
-        navigate("/create-account", { replace: true });
-      }
+      queryClient.refetchQueries({
+        queryKey: ["verify-user"],
+      });
+      navigate("/create-account", { replace: true });
     },
   });
 
@@ -71,9 +63,8 @@ export function UserProfileForm() {
       onSubmit: userProfileFormSchema,
     },
     onSubmit: async ({ value }) => {
-      if (value.dob && userId) {
+      if (value.dob) {
         const data: userProfileFormType = {
-          userId: userId.userId,
           fullName: value.fullname,
           dob: format(value.dob, "yyy-MM-dd"),
           phone: value.phone,
