@@ -13,7 +13,10 @@ function formatDate(date: string) {
 }
 
 function formatLoginDate(date: string) {
-  const formattedDate: string = format(new Date(date), "MMM dd, yyyy");
+  const formattedDate: string = format(
+    new Date(date),
+    "MMM dd, yyyy hh:mm aaaa",
+  );
   return formattedDate;
 }
 
