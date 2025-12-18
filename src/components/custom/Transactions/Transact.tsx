@@ -1,12 +1,7 @@
-import { createAccountApi } from "@/apis/postRequests";
+import { getAllAccounts } from "@/apis/getRequests";
+import { doTransaction } from "@/apis/postRequests";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import {
   Field,
   FieldError,
@@ -24,75 +19,87 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
-import { createAccountFormSchema } from "@/schemas/formSchemas";
-import type { createAccountFormType, transactAccount } from "@/types/types";
+import { transactionFormSchema } from "@/schemas/formSchemas";
+import type { account, accountDetails, transactionForm } from "@/types/types";
 import { useForm } from "@tanstack/react-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { toast } from "sonner";
 
-const allAccounts: Array<transactAccount> = [
-  {
-    accountId: "asdfa",
-    accountName: "savings",
-    accountNumber: "12341234",
-    accountStatus: "ACTIVE",
-    balance: 500.0,
-  },
-  {
-    accountId: "asdasdffa",
-    accountName: "savings 2",
-    accountNumber: "123412af34",
-    accountStatus: "ACTIVE",
-    balance: 200.0,
-  },
-];
-
 export default function Transact() {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [accountDetails, setAccountDetails] = useState<accountDetails>({
+    accountNumber: "0000 0000 0000",
+    accountStatus: "NILL",
+    balance: 0,
+  });
+  let accounts: Array<account> = [];
 
-  const userProfileQuery = useMutation({
-    mutationKey: ["create-account"],
-    mutationFn: (data: createAccountFormType) => {
-      return createAccountApi(data);
+  const getAccounts = useQuery({
+    queryKey: ["all-accounts"],
+    queryFn: async () => {
+      const data = await getAllAccounts();
+      return data;
     },
-    onError: (error: any) => {
+  });
+
+  if (getAccounts.isSuccess) {
+    accounts = getAccounts.data.data.content;
+  }
+
+  const transactionQuery = useMutation({
+    mutationKey: ["do-transaction"],
+    mutationFn: (data: transactionForm) => {
+      return doTransaction(data);
+    },
+    onError: (error) => {
       toast.error(error.response.data.message);
     },
     onSuccess: () => {
-      queryClient.refetchQueries({
-        queryKey: ["verify-user"],
-      });
-      navigate("/app", { replace: true });
+      toast.success("transaction success");
+      queryClient.refetchQueries({ queryKey: ["all-accounts"] });
     },
   });
 
   const form = useForm({
     defaultValues: {
-      accountName: "",
-      accountType: "",
-      balance: 0,
+      fromAccountNumber: "",
+      toAccountNumber: "",
+      ifscCode: "",
+      payeeName: "",
+      bankName: "",
+      amount: 0,
+      remarks: "",
     },
     validators: {
-      onSubmit: createAccountFormSchema,
+      onSubmit: transactionFormSchema,
     },
     onSubmit: async ({ value }) => {
-      const data: createAccountFormType = {
-        accountName: value.accountName,
-        accountType: value.accountType,
-        balance: value.balance,
+      const data: transactionForm = {
+        fromAccountNumber: accountDetails.accountNumber,
+        toAccountNumber: value.toAccountNumber,
+        amount: value.amount,
+        remarks: value.remarks,
       };
 
-      userProfileQuery.mutate(data);
+      resetForm();
+
+      transactionQuery.mutate(data);
     },
   });
+
+  function resetForm() {
+    form.reset();
+    setAccountDetails({
+      accountNumber: "0000 0000 0000",
+      accountStatus: "NILL",
+      balance: 0,
+    });
+  }
+
   return (
-    <section className="flex flex-col gap-5 bg-sidebar rounded-lg p-2">
-      <Card className="lg:min-w-[450px]">
-        <CardHeader>
-          <CardTitle className="text-lg">From</CardTitle>
-        </CardHeader>
+    <section className="flex flex-col gap-5 bg-sidebar rounded-lg">
+      <Card>
         <CardContent>
           <form
             id="transaction-form"
@@ -102,72 +109,312 @@ export default function Transact() {
             }}
           >
             <FieldGroup>
-              <div className="flex flex-wrap gap-5">
-                <form.Field
-                  name="accountType"
-                  children={(field) => {
-                    const isInvalid =
-                      field.state.meta.isTouched && !field.state.meta.isValid;
-                    return (
-                      <Field data-invalid={isInvalid}>
-                        <FieldLabel htmlFor={field.name}>
-                          Account type
-                        </FieldLabel>
-                        <Select
-                          onValueChange={field.handleChange}
-                          value={field.state.value}
-                          {...field}
-                        >
-                          <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="select account type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectLabel>Account type</SelectLabel>
-                              <SelectItem value="SAVINGS">Savings</SelectItem>
-                              <SelectItem value="CURRENT">Current</SelectItem>
-                              <SelectItem value="CREDIT">Credit</SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
+              <FieldGroup>
+                <CardTitle className="text-lg pb-5">From</CardTitle>
+                <FieldGroup>
+                  <div className="flex flex-col xl:grid xl:grid-cols-[minmax(250px,750px)_minmax(750px,1fr)] gap-5">
+                    <form.Field
+                      name="fromAccountNumber"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel
+                              htmlFor={field.name}
+                              className="text-xs"
+                            >
+                              SELECT ACCOUNT
+                            </FieldLabel>
+                            <Select
+                              onValueChange={(value) => {
+                                field.handleChange(value);
 
-                        {isInvalid && (
-                          <FieldError errors={field.state.meta.errors} />
-                        )}
-                      </Field>
-                    );
-                  }}
-                />
-                <div className="flex flex-col gap-2 min-w-[675px]">
-                  <h2>Account details</h2>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="text-xs text-nowrap flex gap-2">
-                      <div className="font-medium">Available Balance:</div>
-                      <div className="font-bold">Available Balance</div>
-                    </div>
-                    <div className="text-xs text-nowrap flex gap-2">
-                      <div className="font-medium">Available Number:</div>
-                      <div className="font-bold">Available Balance</div>
-                    </div>
-                    <div className="text-xs text-nowrap flex gap-2">
-                      <div className="font-medium">Available Status:</div>
-                      <div className="font-bold">Available Balance</div>
+                                const account = accounts.find(
+                                  (a) => a.accountName === value,
+                                );
+
+                                if (account) {
+                                  setAccountDetails({
+                                    accountNumber: account.accountNumber,
+                                    accountStatus: account.accountStatus,
+                                    balance: account.balance,
+                                  });
+                                }
+                              }}
+                              value={field.state.value}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="select account" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectLabel>select account</SelectLabel>
+                                  {accounts.map((a) => (
+                                    <SelectItem
+                                      key={a.accountId}
+                                      value={a.accountName}
+                                    >
+                                      {a.accountName}
+                                    </SelectItem>
+                                  ))}
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+                    <div className="flex flex-col gap-5 min-[1126px]:gap-2">
+                      <h2 className="text-xs">ACCOUNT DETAILS</h2>
+                      <div className="max-[1125px]:flex max-[1125px]:flex-col max-[1125px]:gap-5 min-[1126px]:grid min-[1126px]:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] min-[1126px]:gap-0 min-[1126px]:mt-auto min-[1126px]:mb-auto">
+                        <div className="text-xs flex gap-2">
+                          <div className="font-medium">Available Balance:</div>
+                          <div className="font-bold">
+                            {accountDetails.balance}
+                          </div>
+                        </div>
+                        <div className="text-xs flex gap-2">
+                          <div className="font-medium">Available Number:</div>
+                          <div className="font-bold">
+                            {accountDetails.accountNumber}
+                          </div>
+                        </div>
+                        <div className="text-xs flex gap-2">
+                          <div className="font-medium">Available Status:</div>
+                          <div className="font-bold">
+                            {accountDetails.accountStatus}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                </FieldGroup>
+              </FieldGroup>
+              <div className="border-sidebar-border border-solid border-t-2 w-full"></div>
+              <FieldGroup>
+                <CardTitle className="text-lg pb-5">To</CardTitle>
+                <FieldGroup>
+                  <div className="flex flex-col min-[1126px]:grid min-[1126px]:grid-cols-3 gap-5">
+                    <form.Field
+                      name="payeeName"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel
+                              htmlFor={field.name}
+                              className="text-xs"
+                            >
+                              PAYEE NAME
+                            </FieldLabel>
+                            <Input
+                              id={field.name}
+                              name={field.name}
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              aria-invalid={isInvalid}
+                              placeholder="zenith savings"
+                              autoComplete="off"
+                            />
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+                    <form.Field
+                      name="bankName"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel
+                              htmlFor={field.name}
+                              className="text-xs"
+                            >
+                              BANK NAME
+                            </FieldLabel>
+                            <Input
+                              id={field.name}
+                              name={field.name}
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              aria-invalid={isInvalid}
+                              placeholder="zenith savings"
+                              autoComplete="off"
+                            />
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+                    <form.Field
+                      name="toAccountNumber"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel
+                              htmlFor={field.name}
+                              className="text-xs"
+                            >
+                              ACCOUNT NUMBER
+                            </FieldLabel>
+                            <Input
+                              id={field.name}
+                              name={field.name}
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              aria-invalid={isInvalid}
+                              placeholder="zenith savings"
+                              autoComplete="off"
+                            />
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+                    <form.Field
+                      name="ifscCode"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel
+                              htmlFor={field.name}
+                              className="text-xs"
+                            >
+                              IFSC CODE
+                            </FieldLabel>
+                            <Input
+                              id={field.name}
+                              name={field.name}
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              aria-invalid={isInvalid}
+                              placeholder="zenith savings"
+                              autoComplete="off"
+                            />
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+                    <form.Field
+                      name="amount"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel
+                              htmlFor={field.name}
+                              className="text-xs"
+                            >
+                              AMOUNT
+                            </FieldLabel>
+                            <Input
+                              id={field.name}
+                              name={field.name}
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              aria-invalid={isInvalid}
+                              placeholder="zenith savings"
+                              autoComplete="off"
+                              type="number"
+                            />
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+                    <form.Field
+                      name="remarks"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel
+                              htmlFor={field.name}
+                              className="text-xs"
+                            >
+                              REMARKS
+                            </FieldLabel>
+                            <Input
+                              id={field.name}
+                              name={field.name}
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              aria-invalid={isInvalid}
+                              placeholder="zenith savings"
+                              autoComplete="off"
+                            />
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+                  </div>
+                </FieldGroup>
+              </FieldGroup>
             </FieldGroup>
           </form>
         </CardContent>
         <CardFooter>
-          <Field orientation="horizontal">
-            <Button>
-              {userProfileQuery.isPending ? <Spinner /> : "cancel"}
+          <div className="flex flex-col-reverse gap-3 md:flex-row md:justify-end w-full">
+            <Button variant="secondary" onClick={() => resetForm()}>
+              {"cancel"}
             </Button>
             <Button type="submit" form="transaction-form">
-              {userProfileQuery.isPending ? <Spinner /> : "Pay"}
+              {transactionQuery.isPending ? <Spinner /> : "Pay"}
             </Button>
-          </Field>
+          </div>
         </CardFooter>
       </Card>
     </section>
