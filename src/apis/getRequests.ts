@@ -29,3 +29,17 @@ export async function getUserBootstrap() {
 
   return data;
 }
+
+export async function getLatestTransactions() {
+  const data = await axiosInstance.get(
+    "/transactions/all-transactions?limited=1",
+  );
+
+  return data;
+}
+
+export async function getAllTransactions() {
+  const data = await axiosInstance.get("/transactions/all-transactions");
+
+  return data;
+}
