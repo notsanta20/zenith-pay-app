@@ -72,3 +72,12 @@ export interface transactionForm {
   amount: number;
   remarks: string;
 }
+
+export interface transaction {
+  amount: number;
+  accountNumber: string;
+  remarks: string;
+  timestamp: string;
+  type: string;
+  txnId: string;
+}
