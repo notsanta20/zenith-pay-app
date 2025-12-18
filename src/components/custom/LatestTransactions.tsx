@@ -1,54 +1,77 @@
+import { getLatestTransactions } from "@/apis/getRequests";
+import type { latestTransactions } from "@/types/types";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formatDate } from "@/utils/formatDate";
-
-type transaction = {
-  date: string;
-  type: string;
-  remark: string;
-  amount: number;
-};
+import { useQuery } from "@tanstack/react-query";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
 
 function LatestTransactions() {
-  let count: number = 0;
-  const items: Array<transaction> = [
-    {
-      date: "2025-12-02 06:55:26.957",
-      type: "DEBIT",
-      remark: "payment to john",
-      amount: 560.0,
+  let latestTransactions: Array<latestTransactions> = [];
+  const transactions = useQuery({
+    queryKey: ["latest-transactions"],
+    queryFn: async () => {
+      const data = await getLatestTransactions();
+      return data;
     },
-    {
-      date: "2025-12-02 07:45:46.457",
-      type: "CREDIT",
-      remark: "Interest from debt fund",
-      amount: 75560.0,
-    },
-    {
-      date: "2025-12-02 09:33:25.347",
-      type: "CREDIT",
-      remark: "Rent from julie",
-      amount: 20000,
-    },
-  ];
+  });
+
+  if (transactions.isSuccess) {
+    latestTransactions = transactions.data.data;
+  }
+
+  if (latestTransactions.length === 0) {
+    return (
+      <section className="flex justify-center items-center">
+        <h1>loading....</h1>
+      </section>
+    );
+  }
 
   return (
-    <div className="w-full xl:w-[1000px] flex flex-col gap-4">
-      {items.map((t) => (
-        <div className="grid grid-cols-[110px_1fr_150px]" key={t.date}>
-          <span>{formatDate(t.date)}</span>
-          <span className="flex-auto">{t.remark}</span>
-          <span
-            className={
-              "text-right " +
-              (t.type == "DEBIT" ? "text-red-400" : "text-green-400")
-            }
-          >
-            {t.type == "DEBIT" ? "- " : "+ "}
-            {formatCurrency(t.amount)}
-          </span>
+    <section className="w-full xl:w-[1000px]">
+      <div className="w-full">
+        <div className="overflow-hidden rounded-md">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-25 text-(--text-gray)">Date</TableHead>
+                <TableHead className="text-(--text-gray)">From</TableHead>
+                <TableHead className="text-(--text-gray)">Remarks</TableHead>
+                <TableHead className="text-right text-(--text-gray)">
+                  Amount
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {latestTransactions.map((t) => (
+                <TableRow key={t.timestamp}>
+                  <TableCell className="font-medium text-left">
+                    {formatDate(t.timestamp)}
+                  </TableCell>
+                  <TableCell>{t.accountNumber}</TableCell>
+                  <TableCell>{t.remarks}</TableCell>
+                  <TableCell
+                    className={
+                      "text-right " +
+                      (t.type == "DEBIT" ? "text-red-400" : "text-green-400")
+                    }
+                  >
+                    {formatCurrency(t.amount)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
-      ))}
-    </div>
+      </div>
+    </section>
   );
 }
 
