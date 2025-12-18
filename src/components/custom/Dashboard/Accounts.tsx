@@ -26,7 +26,7 @@ export default function Accounts() {
             {accountsQuery.data.data.content.map((c) => (
               <Card
                 variant={c.accountType}
-                accountName={c.bankName}
+                accountName={c.accountName}
                 accountNumber={c.accountNumber.substring(8, 13)}
                 outstanding={c.outstanding}
                 balance={c.balance}
