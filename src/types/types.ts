@@ -49,3 +49,26 @@ export interface transactAccount {
   accountStatus: string;
   balance: number;
 }
+
+export interface accountDetails {
+  accountNumber: string;
+  accountStatus: string;
+  balance: number;
+}
+
+export interface account {
+  accountId: string;
+  accountNumber: string;
+  accountStatus: string;
+  accountType: string;
+  balance: number;
+  accountName: string;
+  ifscCode: string;
+}
+
+export interface transactionForm {
+  fromAccountNumber: string;
+  toAccountNumber: string;
+  amount: number;
+  remarks: string;
+}
