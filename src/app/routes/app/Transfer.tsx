@@ -1,5 +1,4 @@
 import SiteHeader from "@/components/custom/SiteHeader";
-import PreviousTransfers from "@/components/custom/Transactions/PreviousTransfer";
 import Transact from "@/components/custom/Transactions/Transact";
 import { SidebarInset } from "@/components/ui/sidebar";
 
@@ -9,7 +8,6 @@ function Transfer() {
       <SiteHeader heading="Transfer" username={null} />
       <main className="flex-auto flex flex-col py-25 gap-30">
         <Transact />
-        <PreviousTransfers />
       </main>
     </SidebarInset>
   );
