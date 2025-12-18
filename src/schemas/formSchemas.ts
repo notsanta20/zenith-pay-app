@@ -72,3 +72,29 @@ export const createAccountFormSchema = z.object({
     .nonnegative({ error: "Balance should not be negative" })
     .min(1, { error: "balance need to be atleast 1" }),
 });
+
+export const transactionFormSchema = z.object({
+  fromAccountNumber: z.string({ error: "select an account" }),
+  toAccountNumber: z
+    .string({ error: "enter an account number" })
+    .length(12, { error: "account nmuber must be 12 characters" }),
+  ifscCode: z
+    .string({ error: "enter ifsc code" })
+    .length(10, { error: "ifsc code must be 10 characters" }),
+  payeeName: z
+    .string({ error: "enter payee name" })
+    .min(5, { error: "account name must be at least 5 characters" })
+    .max(30, { error: "account name must not exceed 30 characters" }),
+  bankName: z
+    .string({ error: "enter bank name" })
+    .min(3, { error: "account name must be at least 3 characters" })
+    .max(15, { error: "account name must not exceed 15 characters" }),
+  amount: z.coerce
+    .number({ error: "enter valid balance" })
+    .nonnegative({ error: "Balance should not be negative" })
+    .min(1, { error: "balance need to be atleast 1" }),
+  remarks: z
+    .string({ error: "enter remarks" })
+    .min(3, { error: "account name must be at least 3 characters" })
+    .max(30, { error: "account name must not exceed 30 characters" }),
+});
