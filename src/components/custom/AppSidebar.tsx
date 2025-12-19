@@ -13,14 +13,12 @@ import {
 import {
   BadgeIndianRupee,
   Bell,
-  Command,
   CreditCard,
   Home,
   Layers,
   SendHorizonal,
   ShieldUser,
 } from "lucide-react";
-import { ModeToggle } from "../ModeToggle";
 
 const items = [
   {
@@ -68,7 +66,7 @@ function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
               <a href="#">
-                <img src="src/assets/icons/infinity.svg" alt="infinity.svg" />
+                <img src="/src/assets/icons/infinity.svg" alt="infinity.svg" />
                 <span className="font-medium">Zenith Bank</span>
               </a>
             </SidebarMenuButton>
