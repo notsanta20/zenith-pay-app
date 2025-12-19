@@ -1,5 +1,5 @@
 import { getLatestTransactions } from "@/apis/getRequests";
-import type { latestTransactions } from "@/types/types";
+import type { transaction } from "@/types/types";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { formatDate } from "@/utils/formatDate";
 import { useQuery } from "@tanstack/react-query";
@@ -13,7 +13,7 @@ import {
 } from "../ui/table";
 
 function LatestTransactions() {
-  let latestTransactions: Array<latestTransactions> = [];
+  let latestTransactions: Array<transaction> = [];
   const transactions = useQuery({
     queryKey: ["latest-transactions"],
     queryFn: async () => {
@@ -40,7 +40,7 @@ function LatestTransactions() {
         <div className="overflow-hidden rounded-md">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="border-input">
                 <TableHead className="w-25 text-(--text-gray)">Date</TableHead>
                 <TableHead className="text-(--text-gray)">From</TableHead>
                 <TableHead className="text-(--text-gray)">Remarks</TableHead>
@@ -50,23 +50,28 @@ function LatestTransactions() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {latestTransactions.map((t) => (
-                <TableRow key={t.timestamp}>
-                  <TableCell className="font-medium text-left">
-                    {formatDate(t.timestamp)}
-                  </TableCell>
-                  <TableCell>{t.accountNumber}</TableCell>
-                  <TableCell>{t.remarks}</TableCell>
-                  <TableCell
-                    className={
-                      "text-right " +
-                      (t.type == "DEBIT" ? "text-red-400" : "text-green-400")
-                    }
-                  >
-                    {formatCurrency(t.amount)}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {latestTransactions.map((t) => {
+                const accountNumber =
+                  "**** **** " + t.accountNumber.substring(8);
+                return (
+                  <TableRow key={t.timestamp} className="border-input">
+                    <TableCell className="font-medium text-left">
+                      {formatDate(t.timestamp)}
+                    </TableCell>
+                    <TableCell>{accountNumber}</TableCell>
+                    <TableCell>{t.remarks}</TableCell>
+                    <TableCell
+                      className={
+                        "text-right " +
+                        (t.type == "DEBIT" ? "text-red-400" : "text-green-400")
+                      }
+                    >
+                      {(t.type === "DEBIT" ? "-" : "+") +
+                        formatCurrency(t.amount)}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </div>
