@@ -22,10 +22,13 @@ import { toast } from "sonner";
 import type { loginFormType } from "@/types/types";
 import { loginApi } from "@/apis/postRequests";
 import { Spinner } from "../ui/spinner";
+import { useState } from "react";
+import { Eye, EyeClosed } from "lucide-react";
 
 export function LoginForm() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [isHidden, setIsHidden] = useState<boolean>(true);
 
   const loginQuery = useMutation({
     mutationKey: ["login"],
@@ -103,15 +106,25 @@ export function LoginForm() {
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      type="password"
-                      placeholder="z#Ez3tkDr#$5wj2s*1j&"
-                    />
+                    <div className="relative">
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        type={isHidden ? "password" : "text"}
+                        // placeholder="z#Ez3tkDr#$5wj2s*1j&"
+                      />
+                      <div
+                        className="absolute right-3 top-1/2 -translate-y-1/2 z-10 text-muted-foreground transition-opacity duration-150 ease-out active:scale-90 active:opacity-70 focus:outline-none"
+                        onClick={() => {
+                          setIsHidden(!isHidden);
+                        }}
+                      >
+                        {isHidden ? <EyeClosed size={18} /> : <Eye size={18} />}
+                      </div>
+                    </div>
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
