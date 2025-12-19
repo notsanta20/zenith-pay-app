@@ -1,26 +1,33 @@
-import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { type VariantProps } from "class-variance-authority";
 import { cardVariants } from "./variants/cardVariant";
+import type { HTMLAttributes } from "react";
 
-interface cardProps extends VariantProps<typeof cardVariants> {
+interface cardProps
+  extends HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {
   accountName: string;
   balance: number;
   outstanding: number;
   accountNumber: string;
 }
 
-export function Card(prop: cardProps) {
-  const { variant, size, accountName, balance, outstanding, accountNumber } =
-    prop;
-
+export function Card({
+  variant,
+  size,
+  accountName,
+  balance,
+  outstanding,
+  accountNumber,
+  ...props
+}: cardProps) {
   const convertedBalance: string = formatCurrency(balance);
   const convertedOutstanding: string = formatCurrency(outstanding);
 
   return (
-    <div className={cardVariants({ variant, size })}>
+    <div className={cardVariants({ variant, size })} {...props}>
       <div className="flex items-center gap-5">
-        <img src="./src/assets/icons/infinity.svg" alt="infinity logo" />
+        <img src="/src/assets/icons/infinity.svg" alt="infinity logo" />
         <span>{accountName}</span>
       </div>
       <div className="grid grid-cols-2 gap-5 ">
@@ -35,21 +42,23 @@ export function Card(prop: cardProps) {
           </div>
         )}
       </div>
-      <span
-        className="font-(family-name:--space-mono) text-(--card-text-sec)"
-        onMouseEnter={(e) => {
-          e.stopPropagation();
-          const target = e.target as HTMLSpanElement;
-          target.textContent = "**** **** " + accountNumber;
-        }}
-        onMouseLeave={(e) => {
-          e.stopPropagation();
-          const target = e.target as HTMLSpanElement;
-          target.textContent = "**** **** ****";
-        }}
-      >
-        **** **** ****
-      </span>
+      <div>
+        <span
+          className="font-(family-name:--space-mono) text-(--card-text-sec)"
+          onMouseEnter={(e) => {
+            e.stopPropagation();
+            const target = e.target as HTMLSpanElement;
+            target.textContent = "**** **** " + accountNumber;
+          }}
+          onMouseLeave={(e) => {
+            e.stopPropagation();
+            const target = e.target as HTMLSpanElement;
+            target.textContent = "**** **** ****";
+          }}
+        >
+          **** **** ****
+        </span>
+      </div>
     </div>
   );
 }
