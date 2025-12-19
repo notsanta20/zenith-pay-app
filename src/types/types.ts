@@ -64,6 +64,7 @@ export interface account {
   balance: number;
   accountName: string;
   ifscCode: string;
+  outstanding: number;
 }
 
 export interface transactionForm {
