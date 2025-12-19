@@ -36,8 +36,8 @@ export const cardVariants = cva(
       },
 
       size: {
-        sm: "min-w-[300px] h-[182px]",
-        lg: "min-w-[400px] h-[242px]",
+        sm: "min-w-[300px] min-h-[182px]",
+        lg: "min-w-[400px] min-h-[242px]",
       },
     },
 
