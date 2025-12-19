@@ -9,6 +9,10 @@ import Transactions from "./routes/app/Transactions";
 import CreateProfile from "./routes/app/CreateProfile";
 import CreateAccount from "./routes/app/CreateAccount";
 import ProtectedRoute from "@/components/custom/ProtectedRoute";
+import ErrorPage from "./routes/ErrorPage";
+import Accounts from "./routes/app/Accounts";
+import Notifications from "./routes/app/Notifications";
+import Profile from "./routes/app/Profile";
 
 function Router() {
   return (
@@ -25,8 +29,13 @@ function Router() {
             <Route index element={<Dashboard />} />
             <Route path="transfer" element={<Transfer />} />
             <Route path="transactions" element={<Transactions />} />
+            <Route path="accounts" element={<Accounts />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
         </Route>
+
+        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>
   );
