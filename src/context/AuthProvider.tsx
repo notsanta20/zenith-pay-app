@@ -5,18 +5,28 @@ import type { ReactNode } from "react";
 import { AuthContext } from "./AuthContext";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router";
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
+const PUBLIC_ROUTES = ["/", "/login", "/register"];
+
 export default function AuthProvider({ children }: AuthProviderProps) {
+  const location = useLocation().pathname;
+
+  const isPublicRoute = PUBLIC_ROUTES.some((path) => location.startsWith(path));
+
   const verifyUser = useQuery({
     queryKey: ["verify-user"],
     queryFn: async () => {
       const data = await verifyUserApi();
       return data;
     },
+    enabled: isPublicRoute,
+    retry: false,
+    staleTime: Infinity,
   });
 
   const isAuthenticated: boolean = verifyUser.data?.data.authenticated === true;
