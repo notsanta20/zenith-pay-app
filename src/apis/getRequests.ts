@@ -43,3 +43,11 @@ export async function getAllTransactions() {
 
   return data;
 }
+
+export async function getAccountTransactions(accountId: string) {
+  const data = await axiosInstance.get(
+    "/transactions/all-transactions/" + accountId,
+  );
+
+  return data;
+}
