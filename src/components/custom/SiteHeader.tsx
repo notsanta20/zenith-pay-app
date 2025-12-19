@@ -2,6 +2,7 @@ import { getCurrentDate, formatLoginDate } from "@/utils/formatDate";
 import { ModeToggle } from "../ModeToggle";
 import type { AuthContextValue } from "@/types/types";
 import { useAuth } from "@/context/AuthContext";
+import { SidebarTrigger } from "../ui/sidebar";
 
 function SiteHeader({
   heading,
@@ -17,16 +18,32 @@ function SiteHeader({
     : "null";
 
   return (
-    <header className="w-full flex">
-      <div className="flex-auto flex flex-col text-3xl font-semibold">
-        <h1>{heading}</h1>
-        {username && <h2>{username}</h2>}
+    <header className="w-full flex items-center justify-between gap-3">
+      {/* LEFT */}
+      <div className="flex items-center gap-3">
+        {/* Mobile sidebar toggle */}
+        <div className="md:hidden">
+          <SidebarTrigger />
+        </div>
+
+        <div className="flex flex-col text-3xl font-semibold">
+          <h1 className="leading-none">{heading}</h1>
+          {username && (
+            <h2 className="text-base font-normal text-muted-foreground">
+              {username}
+            </h2>
+          )}
+        </div>
       </div>
+
+      {/* RIGHT */}
       <div className="flex items-center gap-3">
         <ModeToggle />
-        <div className=" flex flex-col items-end">
+        <div className="hidden md:flex flex-col items-end">
           <h2 className="text-3xl font-semibold">{currentDate}</h2>
-          <h2 className="text-sm">last login {lastLoginFormatted}</h2>
+          <h2 className="text-sm text-muted-foreground">
+            last login {lastLoginFormatted}
+          </h2>
         </div>
       </div>
     </header>

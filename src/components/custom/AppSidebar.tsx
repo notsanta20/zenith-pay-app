@@ -11,7 +11,6 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
-  BadgeIndianRupee,
   Bell,
   CreditCard,
   Home,
@@ -35,11 +34,6 @@ const items = [
     title: "Transactions",
     url: "/app/transactions",
     icon: Layers,
-  },
-  {
-    title: "Bill Pay",
-    url: "/app/bill-pay",
-    icon: BadgeIndianRupee,
   },
   {
     title: "Accounts",
@@ -91,7 +85,7 @@ function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="hidden md:flex">
         <SidebarTrigger className="-ml-1" />
       </SidebarFooter>
     </Sidebar>
