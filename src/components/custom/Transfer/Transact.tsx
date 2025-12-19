@@ -35,16 +35,13 @@ export default function Transact() {
   });
   let accounts: Array<account> = [];
 
-  const getAccounts = useQuery({
-    queryKey: ["all-accounts"],
-    queryFn: async () => {
-      const data = await getAllAccounts();
-      return data;
-    },
+  const accountsQuery = useQuery({
+    queryKey: ["accounts-query"],
+    queryFn: getAllAccounts,
   });
 
-  if (getAccounts.isSuccess) {
-    accounts = getAccounts.data.data.content;
+  if (accountsQuery.isSuccess) {
+    accounts = accountsQuery.data.data.content;
   }
 
   const transactionQuery = useMutation({
