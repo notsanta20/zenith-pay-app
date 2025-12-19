@@ -1,20 +1,13 @@
 import SimpleHeading from "../SimpleHeading";
 import { Card } from "../Card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useAuth } from "@/context/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { getAllAccounts } from "@/apis/getRequests";
-import type { AuthContextValue } from "@/types/types";
 
 export default function Accounts() {
-  const auth: AuthContextValue = useAuth();
-
   const accountsQuery = useQuery({
     queryKey: ["accounts-query"],
-    queryFn: async () => {
-      const data = await getAllAccounts(auth.userId!);
-      return data;
-    },
+    queryFn: getAllAccounts,
   });
 
   if (accountsQuery.isSuccess) {
