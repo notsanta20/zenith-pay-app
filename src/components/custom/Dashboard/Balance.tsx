@@ -37,7 +37,7 @@ export default function Balance() {
           }}
           onMouseOut={(e: MouseEvent) => {
             const targetElement: HTMLSpanElement = e.target as HTMLSpanElement;
-            targetElement.textContent = "(╥﹏╥)";
+            targetElement.textContent = "(⌐■_■)";
           }}
         >
           (⌐■_■)

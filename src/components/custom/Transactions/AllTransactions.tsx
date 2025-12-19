@@ -72,7 +72,9 @@ const column = [
             styles)
           }
         >
-          <div className="font-medium"></div>
+          <div className="font-medium">
+            {(type === "DEBIT" ? "-" : "+") + formatCurrency(amount)}
+          </div>
         </div>
       );
     },
