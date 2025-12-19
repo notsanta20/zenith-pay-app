@@ -1,41 +1,16 @@
 import { cn } from "@/lib/utils";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { type VariantProps, cva } from "class-variance-authority";
+import { type VariantProps } from "class-variance-authority";
+import { cardVariants } from "./variants/cardVariant";
 
-const buttonVariants = cva(
-  "flex flex-col justify-around p-3 rounded-xl font-(family-name:--kode-mono) text-(--card-text-pri)",
-  {
-    variants: {
-      variant: {
-        SAVINGS:
-          "bg-gradient-to-b from-(--card-green-from) to-(--card-green-to)",
-        orange:
-          "bg-gradient-to-b from-(--card-orange-from) to-(--card-orange-to)",
-        blue: "bg-gradient-to-b from-(--card-blue-from) to-(--card-blue-to)",
-        purple:
-          "bg-gradient-to-b from-(--card-purple-from) to-(--card-purple-to)",
-      },
-      size: {
-        default: "min-w-[380px] h-[230px]",
-        sm: "min-w-[300px] h-[182px]",
-        lg: "min-w-[400px] h-[242px]",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  },
-);
-
-interface cardProps extends VariantProps<typeof buttonVariants> {
+interface cardProps extends VariantProps<typeof cardVariants> {
   accountName: string;
   balance: number;
   outstanding: number;
   accountNumber: string;
 }
 
-function Card(prop: cardProps) {
+export function Card(prop: cardProps) {
   const { variant, size, accountName, balance, outstanding, accountNumber } =
     prop;
 
@@ -43,7 +18,7 @@ function Card(prop: cardProps) {
   const convertedOutstanding: string = formatCurrency(outstanding);
 
   return (
-    <div className={cn(buttonVariants({ variant, size }))}>
+    <div className={cardVariants({ variant, size })}>
       <div className="flex items-center gap-5">
         <img src="./src/assets/icons/infinity.svg" alt="infinity logo" />
         <span>{accountName}</span>
@@ -62,11 +37,15 @@ function Card(prop: cardProps) {
       </div>
       <span
         className="font-(family-name:--space-mono) text-(--card-text-sec)"
-        onMouseOver={(e) => {
-          e.target.textContent = "**** **** " + accountNumber;
+        onMouseEnter={(e) => {
+          e.stopPropagation();
+          const target = e.target as HTMLSpanElement;
+          target.textContent = "**** **** " + accountNumber;
         }}
-        onMouseOut={(e) => {
-          e.target.textContent = "**** **** ****";
+        onMouseLeave={(e) => {
+          e.stopPropagation();
+          const target = e.target as HTMLSpanElement;
+          target.textContent = "**** **** ****";
         }}
       >
         **** **** ****
@@ -74,5 +53,3 @@ function Card(prop: cardProps) {
     </div>
   );
 }
-
-export { Card, buttonVariants };
