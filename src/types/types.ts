@@ -80,4 +80,5 @@ export interface transaction {
   timestamp: string;
   type: string;
   txnId: string;
+  status: string;
 }
