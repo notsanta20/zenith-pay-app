@@ -1,5 +1,5 @@
 import SiteHeader from "@/components/custom/SiteHeader";
-import Transact from "@/components/custom/Transactions/Transact";
+import Transact from "@/components/custom/Transfer/Transact";
 import { SidebarInset } from "@/components/ui/sidebar";
 
 function Transfer() {
