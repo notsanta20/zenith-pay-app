@@ -6,14 +6,7 @@ export default function ProtectedRoute() {
   const { isAuthenticated, isLoading, onBoard } = useAuth();
   const location = useLocation();
 
-  if (isLoading)
-    return (
-      <>
-        <main className="flex justify-center items-center h-screen">
-          <h1>loading....</h1>
-        </main>
-      </>
-    );
+  if (isLoading) return <></>;
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
