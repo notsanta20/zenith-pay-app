@@ -31,7 +31,7 @@ export default function AllAccounts() {
   }
 
   if (accountTransactionsQuery.isSuccess) {
-    accountTransactions = accountTransactionsQuery.data.data.content;
+    accountTransactions = accountTransactionsQuery.data.data;
   }
 
   return (
