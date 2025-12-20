@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Calendar, Phone, Verified } from "lucide-react";
+import UserProfilePic from "./UserProfilePic";
 
 export default function ProfileHeader() {
   return (
-    <section className="bg-card border border-input rounded-md p-5 flex flex-col md:flex-row gap-8 w-full md:min-w-[400px] md:max-w-[700px] md:mx-auto">
-      <div className="self-center">PROFILE</div>
+    <section className="bg-card border border-input rounded-md p-5 flex flex-col md:flex-row gap-8 w-full">
+      <div className="self-center">
+        <UserProfilePic name="santa" />
+      </div>
       <div className="self-center flex flex-col items-center md:items-start gap-4">
         <span className="font-bold text-lg">Santa</span>
         <div className="flex gap-4 text-(--text-gray) text-sm">
