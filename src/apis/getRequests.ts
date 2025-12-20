@@ -7,7 +7,7 @@ export async function verifyUserApi() {
 }
 
 export async function getUserProfile() {
-  const data = await axiosInstance.get("/profile/me/");
+  const data = await axiosInstance.get("/profile/me");
 
   return data;
 }
