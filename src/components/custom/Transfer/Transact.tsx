@@ -21,6 +21,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { transactionFormSchema } from "@/schemas/formSchemas";
 import type { account, accountDetails, transactionForm } from "@/types/types";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -33,16 +34,13 @@ export default function Transact() {
     accountStatus: "NILL",
     balance: 0,
   });
-  let accounts: Array<account> = [];
 
   const accountsQuery = useQuery({
     queryKey: ["accounts-query"],
     queryFn: getAllAccounts,
   });
 
-  if (accountsQuery.isSuccess) {
-    accounts = accountsQuery.data.data.content;
-  }
+  const accounts: Array<account> = accountsQuery.data?.data.content ?? [];
 
   const transactionQuery = useMutation({
     mutationKey: ["do-transaction"],
@@ -50,11 +48,18 @@ export default function Transact() {
       return doTransaction(data);
     },
     onError: (error) => {
-      toast.error(error.response.data.message);
+      const status = error.response.status;
+      if (status === 400) {
+        toast.error("Insufficient balance");
+      } else if (status === 404) {
+        toast.error("account not found");
+      } else {
+        toast.error("Internal server error");
+      }
     },
     onSuccess: () => {
       toast.success("transaction success");
-      queryClient.refetchQueries({ queryKey: ["all-accounts"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts-query"] });
     },
   });
 
@@ -90,7 +95,7 @@ export default function Transact() {
     setAccountDetails({
       accountNumber: "0000 0000 0000",
       accountStatus: "NILL",
-      balance: 0,
+      balance: "0",
     });
   }
 
@@ -133,10 +138,13 @@ export default function Transact() {
                                 );
 
                                 if (account) {
+                                  const amount = formatCurrency(
+                                    account.balance,
+                                  );
                                   setAccountDetails({
                                     accountNumber: account.accountNumber,
                                     accountStatus: account.accountStatus,
-                                    balance: account.balance,
+                                    balance: amount,
                                   });
                                 }
                               }}
