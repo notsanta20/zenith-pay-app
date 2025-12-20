@@ -1,11 +1,11 @@
 import { getUserBootstrap, verifyUserApi } from "@/apis/getRequests";
 import { onBoardType, type AuthContextValue } from "@/types/types";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import type { ReactNode } from "react";
 import { AuthContext } from "./AuthContext";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -15,8 +15,8 @@ const PUBLIC_ROUTES = ["/", "/login", "/register"];
 
 export default function AuthProvider({ children }: AuthProviderProps) {
   const location = useLocation().pathname;
-
-  const isPublicRoute = PUBLIC_ROUTES.some((path) => location.startsWith(path));
+  const navigate = useNavigate();
+  const isPublicRoute = PUBLIC_ROUTES.includes(location);
 
   const verifyUser = useQuery({
     queryKey: ["verify-user"],
@@ -24,12 +24,17 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       const data = await verifyUserApi();
       return data;
     },
-    enabled: isPublicRoute,
     retry: false,
     staleTime: Infinity,
   });
 
   const isAuthenticated: boolean = verifyUser.data?.data.authenticated === true;
+
+  useEffect(() => {
+    if (isAuthenticated && isPublicRoute) {
+      navigate("/app", { replace: true });
+    }
+  }, [isAuthenticated, isPublicRoute]);
 
   if (verifyUser.isError) {
     const message: string = verifyUser.error.response.data.message;
