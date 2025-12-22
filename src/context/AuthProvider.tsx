@@ -1,6 +1,6 @@
 import { getUserBootstrap, verifyUserApi } from "@/apis/getRequests";
 import { onBoardType, type AuthContextValue } from "@/types/types";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { AuthContext } from "./AuthContext";
 import { toast } from "sonner";
@@ -17,6 +17,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const location = useLocation().pathname;
   const navigate = useNavigate();
   const isPublicRoute = PUBLIC_ROUTES.includes(location);
+  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
 
   const verifyUser = useQuery({
     queryKey: ["verify-user"],
@@ -24,8 +25,8 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       const data = await verifyUserApi();
       return data;
     },
+    enabled: !isPublicRoute,
     retry: false,
-    staleTime: Infinity,
   });
 
   const isAuthenticated: boolean = verifyUser.data?.data.authenticated === true;
@@ -34,16 +35,14 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     if (isAuthenticated && isPublicRoute) {
       navigate("/app", { replace: true });
     }
-  }, [isAuthenticated, isPublicRoute]);
+  }, [isAuthenticated, isPublicRoute, navigate]);
 
-  if (verifyUser.isError) {
-    const message: string = verifyUser.error.response.data.message;
-    if (message === "JWT token expired") {
-      toast.error(message);
-    } else if (message === "Invalid JWT token") {
-      toast.error(message);
+  if (verifyUser.isError && isLoggingOut) {
+    const status: number = verifyUser.error.response.status;
+    if (status === 401) {
+      toast.error("Session expired, login again.");
     } else {
-      toast.error("Internal server error");
+      toast.error("Internal server error.");
     }
   }
 
@@ -56,13 +55,12 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     enabled: verifyUser.data?.data.authenticated === true,
   });
 
-  const isLoading: boolean =
-    verifyUser.isLoading || (isAuthenticated && userBootstrap.isLoading);
+  const isLoading: boolean = verifyUser.isLoading || userBootstrap.isLoading;
 
   let onBoard: string = onBoardType.login;
 
   if (userBootstrap.isSuccess) {
-    const onBoardRes: string = userBootstrap.data?.data;
+    const onBoardRes = userBootstrap.data?.data;
 
     onBoard = (() => {
       if (!onBoardRes.active) return onBoardType.profile;
@@ -75,10 +73,14 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
   let username: string | null = null;
   let lastLogin: string | null = null;
+  let securityNotifications: boolean = true;
+  let generalNotifications: boolean = true;
 
   if (userBootstrap.isSuccess) {
     username = userBootstrap.data?.data.username;
     lastLogin = userBootstrap.data?.data.lastLoginAt;
+    securityNotifications = userBootstrap.data?.data.securityNotifications;
+    generalNotifications = userBootstrap.data?.data.generalNotifications;
   }
 
   const values = useMemo<AuthContextValue>(
@@ -88,8 +90,20 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       onBoard,
       username,
       lastLogin,
+      securityNotifications,
+      generalNotifications,
+      setIsLoggingOut,
     }),
-    [isAuthenticated, isLoading, onBoard, username, lastLogin],
+    [
+      isAuthenticated,
+      isLoading,
+      onBoard,
+      username,
+      lastLogin,
+      securityNotifications,
+      generalNotifications,
+      setIsLoggingOut,
+    ],
   );
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
