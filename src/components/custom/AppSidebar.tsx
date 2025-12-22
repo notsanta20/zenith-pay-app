@@ -18,6 +18,7 @@ import {
   SendHorizonal,
   ShieldUser,
 } from "lucide-react";
+import Logout from "./Logout";
 
 const items = [
   {
@@ -85,8 +86,9 @@ function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="hidden md:flex">
-        <SidebarTrigger className="-ml-1" />
+      <SidebarFooter className="flex flex-row items-center">
+        <SidebarTrigger className="-ml-1 hidden md:flex" />
+        <Logout />
       </SidebarFooter>
     </Sidebar>
   );
