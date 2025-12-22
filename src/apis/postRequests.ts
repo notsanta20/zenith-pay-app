@@ -29,3 +29,9 @@ export async function doTransaction(formData: transactionForm) {
 
   return data;
 }
+
+export async function logoutApi() {
+  const data = await axiosInstance.post("/auth/logout");
+
+  return data;
+}
