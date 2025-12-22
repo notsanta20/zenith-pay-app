@@ -45,7 +45,7 @@ export function AccountForm() {
     },
     onSuccess: () => {
       queryClient.refetchQueries({
-        queryKey: ["verify-user"],
+        queryKey: ["user-bootstrap"],
       });
       navigate("/app", { replace: true });
     },
