@@ -23,9 +23,13 @@ import type { registerFormRequest } from "@/types/types";
 import { registerApi } from "@/apis/postRequests";
 import type { AxiosError, AxiosResponse } from "axios";
 import { Spinner } from "../ui/spinner";
+import { Eye, EyeClosed } from "lucide-react";
+import { useState } from "react";
 
 export function RegisterForm() {
   const navigate = useNavigate();
+  const [isPassHidden, setIsPassHidden] = useState<boolean>(true);
+  const [isConfPassHidden, setIsConfPassHidden] = useState<boolean>(true);
 
   const registerQuery = useMutation({
     mutationKey: ["register"],
@@ -109,15 +113,29 @@ export function RegisterForm() {
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      type="password"
-                      placeholder="z#Ez3tkDr#$5wj2s*1j&"
-                    />
+                    <div className="relative">
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        type={isPassHidden ? "password" : "text"}
+                        placeholder="z#Ez3tkDr#$5s*1&"
+                      />
+                      <div
+                        className="absolute right-3 top-1/2 -translate-y-1/2 z-10 text-muted-foreground transition-opacity duration-150 ease-out active:scale-90 active:opacity-70 focus:outline-none"
+                        onClick={() => {
+                          setIsPassHidden(!isPassHidden);
+                        }}
+                      >
+                        {isPassHidden ? (
+                          <EyeClosed size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </div>
+                    </div>
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
@@ -135,15 +153,29 @@ export function RegisterForm() {
                     <FieldLabel htmlFor={field.name}>
                       Confirm Password
                     </FieldLabel>
-                    <Input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      type="password"
-                      placeholder="z#Ez3tkDr#$5wj2s*1j&"
-                    />
+                    <div className="relative">
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        type={isConfPassHidden ? "password" : "text"}
+                        placeholder="z#Ez3tkDr#$5s*1&"
+                      />
+                      <div
+                        className="absolute right-3 top-1/2 -translate-y-1/2 z-10 text-muted-foreground transition-opacity duration-150 ease-out active:scale-90 active:opacity-70 focus:outline-none"
+                        onClick={() => {
+                          setIsConfPassHidden(!isConfPassHidden);
+                        }}
+                      >
+                        {isConfPassHidden ? (
+                          <EyeClosed size={18} />
+                        ) : (
+                          <Eye size={18} />
+                        )}
+                      </div>
+                    </div>
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
