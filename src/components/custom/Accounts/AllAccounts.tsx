@@ -37,14 +37,14 @@ export default function AllAccounts() {
   return (
     <Card className="border-inputh-full flex flex-col h-full min-h-0">
       <div className="flex flex-col md:flex-row gap-4 px-4 flex-1 min-h-0 overflow-hidden">
-        <div className="flex flex-col gap-4 shrink-0 min-h-0">
+        <div className="flex flex-col gap-4 min-h-0">
           <div>
             <h2 className="text-xl font-bold">All Accounts and Cards</h2>
             <span className="text-sm text-muted-foreground">
               All acitve and inactive accounts and cards
             </span>
           </div>
-          <div className="flex-1 flex md:flex-col gap-4 overflow-x-auto md:overflow-y-auto min-h-0">
+          <div className="flex-1 flex md:flex-col gap-4 overflow-auto md:overflow-x-hidden">
             {allAccounts.map((a) => (
               <CustomCard
                 variant={a.accountType}

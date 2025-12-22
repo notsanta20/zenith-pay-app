@@ -114,7 +114,7 @@ export function LoginForm() {
                         onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
                         type={isHidden ? "password" : "text"}
-                        // placeholder="z#Ez3tkDr#$5wj2s*1j&"
+                        placeholder="z#Ez3tkDr#$5s*1&"
                       />
                       <div
                         className="absolute right-3 top-1/2 -translate-y-1/2 z-10 text-muted-foreground transition-opacity duration-150 ease-out active:scale-90 active:opacity-70 focus:outline-none"
