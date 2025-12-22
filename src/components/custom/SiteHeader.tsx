@@ -19,20 +19,14 @@ function SiteHeader({
 
   return (
     <header className="w-full flex items-center justify-between gap-3">
-      {/* LEFT */}
       <div className="flex items-center gap-3">
-        {/* Mobile sidebar toggle */}
         <div className="md:hidden">
           <SidebarTrigger />
         </div>
 
         <div className="flex flex-col text-3xl font-semibold">
           <h1 className="leading-none">{heading}</h1>
-          {username && (
-            <h2 className="text-base font-normal text-muted-foreground">
-              {username}
-            </h2>
-          )}
+          {username && <h2>{username}</h2>}
         </div>
       </div>
 
