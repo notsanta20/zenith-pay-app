@@ -1,3 +1,5 @@
+import type React from "react";
+
 export interface loginFormType {
   email: string;
   password: string;
@@ -34,6 +36,9 @@ export interface AuthContextValue {
   onBoard: string;
   username: string | null;
   lastLogin: string | null;
+  securityNotifications: boolean;
+  generalNotifications: boolean;
+  setIsLoggingOut: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface createAccountFormType {
@@ -82,4 +87,33 @@ export interface transaction {
   type: string;
   txnId: string;
   status: string;
+}
+
+export interface userProfileUpdateFormType {
+  fullName: string;
+  dob: string;
+  phone: string;
+  password: string;
+}
+
+export interface userProfile {
+  full_name: string;
+  dob: string;
+  phone: string;
+  created_at: string;
+  kyc_status: boolean;
+}
+
+export interface updatePasswordFormType {
+  password: string;
+  confirmPassword: string;
+}
+
+export interface updatePasswordFormRequest {
+  password: string;
+}
+
+export interface notificationsState {
+  securityNotification: boolean;
+  generalNotification: boolean;
 }
