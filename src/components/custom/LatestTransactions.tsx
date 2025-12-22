@@ -13,7 +13,7 @@ import {
 } from "../ui/table";
 
 function LatestTransactions() {
-  let latestTransactions: Array<transaction> = [];
+  let latestTransactions: Array<transaction> | null = null;
   const transactions = useQuery({
     queryKey: ["latest-transactions"],
     queryFn: async () => {
@@ -26,10 +26,23 @@ function LatestTransactions() {
     latestTransactions = transactions.data.data;
   }
 
-  if (latestTransactions.length === 0) {
+  if (!latestTransactions) {
     return (
       <section className="flex justify-center items-center">
         <h1>loading....</h1>
+      </section>
+    );
+  }
+
+  if (latestTransactions.length === 0) {
+    return (
+      <section className="flex justify-center items-center">
+        <div className="flex flex-col items-center py-[5%]">
+          <h1 className="text-2xl font-medium">
+            No transactions have been made
+          </h1>
+          <span className="mt-4 text-xl text-muted-foreground">¯\_(ツ)_/¯</span>
+        </div>
       </section>
     );
   }

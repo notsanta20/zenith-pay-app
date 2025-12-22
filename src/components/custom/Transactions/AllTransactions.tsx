@@ -5,7 +5,7 @@ import { DataTable } from "../dataTable/TransactionDataTable";
 import { column } from "../dataTable/TransactionColumn";
 
 export default function AllTransactions() {
-  let allTransactions: Array<transaction> = [];
+  let allTransactions: Array<transaction> | null = null;
 
   const transactionQuery = useQuery({
     queryKey: ["all-transactions"],
@@ -19,10 +19,23 @@ export default function AllTransactions() {
     allTransactions = transactionQuery.data.data;
   }
 
-  if (allTransactions.length === 0) {
+  if (!allTransactions) {
     return (
       <section className="flex justify-center items-center h-screen">
         <h1>loading....</h1>
+      </section>
+    );
+  }
+
+  if (allTransactions.length === 0) {
+    return (
+      <section className="flex justify-center h-screen py-[25%]">
+        <div className="flex flex-col items-center">
+          <h1 className="text-2xl font-medium">
+            No transactions have been made
+          </h1>
+          <span className="mt-4 text-xl text-muted-foreground">¯\_(ツ)_/¯</span>
+        </div>
       </section>
     );
   }
