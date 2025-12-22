@@ -24,11 +24,11 @@ export default function ProfileContent() {
         </TabsContent>
 
         <TabsContent value="security">
-          <NotificationsTab />
+          <SecurityTab />
         </TabsContent>
 
         <TabsContent value="notifications">
-          <SecurityTab />
+          <NotificationsTab />
         </TabsContent>
       </Tabs>
     </section>
