@@ -1,5 +1,4 @@
 import { getUserProfile } from "@/apis/getRequests";
-import { loginApi } from "@/apis/postRequests";
 import { updateUserProfileApi } from "@/apis/putRequests";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -35,7 +34,6 @@ import { format } from "date-fns";
 import { CalendarIcon, Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { tr } from "zod/v4/locales";
 
 export default function PersonalTab() {
   const queryClient = useQueryClient();
@@ -86,9 +84,7 @@ export default function PersonalTab() {
           password: value.password,
         };
 
-        console.log(data);
-
-        // userProfileQuery.mutate(data);
+        userProfileQuery.mutate(data);
       }
     },
   });
