@@ -24,6 +24,7 @@ import { loginApi } from "@/apis/postRequests";
 import { Spinner } from "../ui/spinner";
 import { useState } from "react";
 import { Eye, EyeClosed } from "lucide-react";
+import { AxiosError } from "axios";
 
 export function LoginForm() {
   const navigate = useNavigate();
@@ -36,7 +37,11 @@ export function LoginForm() {
       return loginApi(data);
     },
     onError: (error) => {
-      toast.error(error.response.data.message);
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        }
+      }
     },
     onSuccess: () => {
       queryClient.refetchQueries({

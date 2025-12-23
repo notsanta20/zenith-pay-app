@@ -1,4 +1,6 @@
+import type { createAccountFormSchema } from "@/schemas/formSchemas";
 import type React from "react";
+import type z from "zod";
 
 export interface loginFormType {
   email: string;
@@ -58,14 +60,14 @@ export interface transactAccount {
 export interface accountDetails {
   accountNumber: string;
   accountStatus: string;
-  balance: string;
+  balance: number;
 }
 
 export interface account {
   accountId: string;
   accountNumber: string;
   accountStatus: string;
-  accountType: string;
+  accountType: z.infer<typeof createAccountFormSchema>["accountType"];
   balance: number;
   accountName: string;
   ifscCode: string;

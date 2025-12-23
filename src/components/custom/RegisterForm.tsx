@@ -21,7 +21,7 @@ import { registerFormSchema } from "@/schemas/formSchemas";
 import { toast } from "sonner";
 import type { registerFormRequest } from "@/types/types";
 import { registerApi } from "@/apis/postRequests";
-import type { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, type AxiosResponse } from "axios";
 import { Spinner } from "../ui/spinner";
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
@@ -36,8 +36,12 @@ export function RegisterForm() {
     mutationFn: (data: registerFormRequest) => {
       return registerApi(data);
     },
-    onError: (error: AxiosError) => {
-      toast.error(error.response?.data.message);
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          toast.error(error.response?.data.message);
+        }
+      }
     },
     onSuccess: (data: AxiosResponse) => {
       toast.success(data.data.message);

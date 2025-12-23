@@ -3,6 +3,7 @@ import { Card } from "../Card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useQuery } from "@tanstack/react-query";
 import { getAllAccounts } from "@/apis/getRequests";
+import type { account } from "@/types/types";
 
 export default function Accounts() {
   const accountsQuery = useQuery({
@@ -16,7 +17,7 @@ export default function Accounts() {
         <SimpleHeading text="Accounts" />
         <ScrollArea className="w-full whitespace-nowrap">
           <div className="flex w-max space-x-4 p-4">
-            {accountsQuery.data.data.content.map((c) => (
+            {accountsQuery.data.data.content.map((c: account) => (
               <Card
                 variant={c.accountType}
                 accountName={c.accountName}

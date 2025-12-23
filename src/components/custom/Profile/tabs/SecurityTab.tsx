@@ -21,6 +21,7 @@ import { updatePassowrdFormSchema } from "@/schemas/formSchemas";
 import type { updatePasswordFormRequest } from "@/types/types";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -36,10 +37,14 @@ export default function SecurityTab() {
       return updatePassApi(data);
     },
     onError: (error) => {
-      if (error.response.status === 400) {
-        toast.error("same password");
-      } else {
-        toast.error("Failed to udpate password, try again later.");
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          if (error.response.status === 400) {
+            toast.error("same password");
+          } else {
+            toast.error("Failed to udpate password, try again later.");
+          }
+        }
       }
     },
     onSuccess: () => {

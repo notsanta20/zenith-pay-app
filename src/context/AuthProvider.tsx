@@ -6,6 +6,7 @@ import { AuthContext } from "./AuthContext";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router";
+import { AxiosError } from "axios";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -38,11 +39,15 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   }, [isAuthenticated, isPublicRoute, navigate]);
 
   if (verifyUser.isError && isLoggingOut) {
-    const status: number = verifyUser.error.response.status;
-    if (status === 401) {
-      toast.error("Session expired, login again.");
-    } else {
-      toast.error("Internal server error.");
+    if (verifyUser.error instanceof AxiosError) {
+      if (verifyUser.error.response) {
+        const status: number = verifyUser.error.response.status;
+        if (status === 401) {
+          toast.error("Session expired, login again.");
+        } else {
+          toast.error("Internal server error.");
+        }
+      }
     }
   }
 

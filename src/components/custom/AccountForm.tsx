@@ -30,6 +30,7 @@ import { toast } from "sonner";
 import type { createAccountFormType } from "@/types/types";
 import { Spinner } from "../ui/spinner";
 import { createAccountApi } from "@/apis/postRequests";
+import { AxiosError } from "axios";
 
 export function AccountForm() {
   const navigate = useNavigate();
@@ -40,8 +41,12 @@ export function AccountForm() {
     mutationFn: (data: createAccountFormType) => {
       return createAccountApi(data);
     },
-    onError: (error: any) => {
-      toast.error(error.response.data.message);
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        }
+      }
     },
     onSuccess: () => {
       queryClient.refetchQueries({
@@ -58,7 +63,23 @@ export function AccountForm() {
       balance: 0,
     },
     validators: {
-      onSubmit: createAccountFormSchema,
+      onSubmit: ({ value }) => {
+        const result = createAccountFormSchema.safeParse(value);
+
+        if (!result.success) {
+          const fieldErrors: Record<string, string[]> = {};
+
+          for (const issue of result.error.issues) {
+            const fieldName = issue.path[0];
+            if (typeof fieldName === "string") {
+              fieldErrors[fieldName] ??= [];
+              fieldErrors[fieldName].push(issue.message);
+            }
+          }
+
+          return fieldErrors;
+        }
+      },
     },
     onSubmit: async ({ value }) => {
       const data: createAccountFormType = {
@@ -121,7 +142,6 @@ export function AccountForm() {
                     <Select
                       onValueChange={field.handleChange}
                       value={field.state.value}
-                      {...field}
                     >
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="select account type" />
@@ -156,7 +176,9 @@ export function AccountForm() {
                       name={field.name}
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={(e) =>
+                        field.handleChange(parseFloat(e.target.value))
+                      }
                       aria-invalid={isInvalid}
                       placeholder="zenith"
                       autoComplete="off"

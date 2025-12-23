@@ -30,6 +30,7 @@ import type {
 } from "@/types/types";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { format } from "date-fns";
 import { CalendarIcon, Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
@@ -54,7 +55,11 @@ export default function PersonalTab() {
       return updateUserProfileApi(data);
     },
     onError: (error) => {
-      toast.error(error.response.data.message);
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        }
+      }
     },
     onSuccess: () => {
       queryClient.refetchQueries({

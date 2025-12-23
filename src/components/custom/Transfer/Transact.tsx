@@ -24,6 +24,7 @@ import type { account, accountDetails, transactionForm } from "@/types/types";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -48,13 +49,17 @@ export default function Transact() {
       return doTransaction(data);
     },
     onError: (error) => {
-      const status = error.response.status;
-      if (status === 400) {
-        toast.error("Insufficient balance");
-      } else if (status === 404) {
-        toast.error("account not found");
-      } else {
-        toast.error("Internal server error");
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          const status = error.response.status;
+          if (status === 400) {
+            toast.error("Insufficient balance");
+          } else if (status === 404) {
+            toast.error("account not found");
+          } else {
+            toast.error("Internal server error");
+          }
+        }
       }
     },
     onSuccess: () => {
@@ -74,7 +79,23 @@ export default function Transact() {
       remarks: "",
     },
     validators: {
-      onSubmit: transactionFormSchema,
+      onSubmit: ({ value }) => {
+        const result = transactionFormSchema.safeParse(value);
+
+        if (!result.success) {
+          const fieldErrors: Record<string, string[]> = {};
+
+          for (const issue of result.error.issues) {
+            const fieldName = issue.path[0];
+            if (typeof fieldName === "string") {
+              fieldErrors[fieldName] ??= [];
+              fieldErrors[fieldName].push(issue.message);
+            }
+          }
+
+          return fieldErrors;
+        }
+      },
     },
     onSubmit: async ({ value }) => {
       const data: transactionForm = {
@@ -95,7 +116,7 @@ export default function Transact() {
     setAccountDetails({
       accountNumber: "0000 0000 0000",
       accountStatus: "NILL",
-      balance: "0",
+      balance: 0,
     });
   }
 
@@ -144,7 +165,7 @@ export default function Transact() {
                                   setAccountDetails({
                                     accountNumber: account.accountNumber,
                                     accountStatus: account.accountStatus,
-                                    balance: amount,
+                                    balance: parseFloat(amount),
                                   });
                                 }
                               }}
@@ -358,7 +379,7 @@ export default function Transact() {
                               value={field.state.value}
                               onBlur={field.handleBlur}
                               onChange={(e) =>
-                                field.handleChange(e.target.value)
+                                field.handleChange(parseFloat(e.target.value))
                               }
                               aria-invalid={isInvalid}
                               placeholder="zenith savings"

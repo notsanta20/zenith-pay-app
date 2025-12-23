@@ -30,6 +30,7 @@ import { useState } from "react";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
+import { AxiosError } from "axios";
 
 export function UserProfileForm() {
   const [open, setOpen] = useState(false);
@@ -42,7 +43,11 @@ export function UserProfileForm() {
       return updateUserProfileApi(data);
     },
     onError: (error) => {
-      toast.error(error.response.data.message);
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        }
+      }
     },
     onSuccess: () => {
       queryClient.refetchQueries({

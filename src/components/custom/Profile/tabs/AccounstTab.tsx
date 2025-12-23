@@ -29,6 +29,7 @@ import { createAccountFormSchema } from "@/schemas/formSchemas";
 import type { createAccountFormType } from "@/types/types";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { toast } from "sonner";
 
 export default function AccounstTab() {
@@ -37,8 +38,12 @@ export default function AccounstTab() {
     mutationFn: (data: createAccountFormType) => {
       return createAccountApi(data);
     },
-    onError: (error: any) => {
-      toast.error(error.response.data.message);
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          toast.error(error.response.data.message);
+        }
+      }
     },
     onSuccess: () => {
       toast.success("Account created successfully");
@@ -52,7 +57,23 @@ export default function AccounstTab() {
       balance: 0,
     },
     validators: {
-      onSubmit: createAccountFormSchema,
+      onSubmit: ({ value }) => {
+        const result = createAccountFormSchema.safeParse(value);
+
+        if (!result.success) {
+          const fieldErrors: Record<string, string[]> = {};
+
+          for (const issue of result.error.issues) {
+            const fieldName = issue.path[0];
+            if (typeof fieldName === "string") {
+              fieldErrors[fieldName] ??= [];
+              fieldErrors[fieldName].push(issue.message);
+            }
+          }
+
+          return fieldErrors;
+        }
+      },
     },
     onSubmit: async ({ value }) => {
       const data: createAccountFormType = {
@@ -150,7 +171,9 @@ export default function AccounstTab() {
                       name={field.name}
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
+                      onChange={(e) =>
+                        field.handleChange(parseFloat(e.target.value))
+                      }
                       aria-invalid={isInvalid}
                       placeholder="zenith"
                       autoComplete="off"

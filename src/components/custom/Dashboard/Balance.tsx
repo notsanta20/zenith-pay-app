@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getTotalBalance } from "@/apis/getRequests";
 import { toast } from "sonner";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { AxiosError } from "axios";
 
 export default function Balance() {
   const totalBalanceQuery = useQuery({
@@ -16,8 +17,12 @@ export default function Balance() {
   });
 
   if (totalBalanceQuery.isError) {
-    if (totalBalanceQuery.error.status === 404) {
-      toast.error("No accounts available, create a account");
+    if (totalBalanceQuery.error instanceof AxiosError) {
+      if (totalBalanceQuery.error.response) {
+        if (totalBalanceQuery.error.status === 404) {
+          toast.error("No accounts available, create a account");
+        }
+      }
     }
   }
 
