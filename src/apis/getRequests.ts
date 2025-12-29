@@ -51,3 +51,9 @@ export async function getAccountTransactions(accountId: string) {
 
   return data;
 }
+
+export async function getNotifications() {
+  const data = await axiosInstance.get("/notifications/all");
+
+  return data;
+}
