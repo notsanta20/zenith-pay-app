@@ -119,3 +119,10 @@ export interface notificationsState {
   securityNotification: boolean;
   generalNotification: boolean;
 }
+
+export interface notification {
+  id: string;
+  message: string;
+  notificationType: string;
+  timeStamp: string;
+}
