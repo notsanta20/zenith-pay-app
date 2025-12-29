@@ -27,3 +27,9 @@ export async function updateGeneralNotification() {
 
   return data;
 }
+
+export async function readNotifications() {
+  const data = await axiosInstance.put("/notifications/read");
+
+  return data;
+}
