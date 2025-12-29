@@ -121,8 +121,8 @@ export default function Transact() {
   }
 
   return (
-    <section className="flex flex-col gap-5 bg-sidebar rounded-lg">
-      <Card>
+    <section className="flex flex-col gap-5">
+      <Card className="border border-input bg-background">
         <CardContent>
           <form
             id="transaction-form"

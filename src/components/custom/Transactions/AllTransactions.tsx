@@ -29,7 +29,7 @@ export default function AllTransactions() {
 
   if (allTransactions.length === 0) {
     return (
-      <section className="flex justify-center h-screen py-[25%]">
+      <section className="flex justify-center h-full py-[25%]">
         <div className="flex flex-col items-center">
           <h1 className="text-2xl font-medium">
             No transactions have been made

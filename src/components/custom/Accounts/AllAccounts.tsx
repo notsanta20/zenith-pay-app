@@ -35,7 +35,7 @@ export default function AllAccounts() {
   }
 
   return (
-    <Card className="border-inputh-full flex flex-col h-full min-h-0">
+    <Card className="border-input bg-background flex flex-col h-full min-h-0">
       <div className="flex flex-col md:flex-row gap-4 px-4 flex-1 min-h-0 overflow-hidden">
         <div className="flex flex-col gap-4 min-h-0">
           <div>
