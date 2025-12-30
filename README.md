@@ -15,6 +15,15 @@ The frontend focuses on **auth correctness, backend-driven onboarding, responsiv
 
 ---
 
+## 🔗 Backend Repository
+
+The frontend consumes APIs exposed by the **Zenith Pay Backend**, which is built using Spring Boot microservices and secured via an API Gateway.
+
+👉 **Backend Repository:**  
+https://github.com/notsanta20/zenith-pay
+
+---
+
 ## ⚙️ Tech Stack
 
 - **Frontend:** React, TypeScript
@@ -67,6 +76,22 @@ Public routes:
 - `/register`
 
 All other routes are protected.
+
+---
+
+## 👤 Profile, Security & Notifications
+
+- **Profile Management:**  
+  Users can view and update profile details such as name and contact information.
+
+- **Security Settings:**  
+  Supports secure password updates with validation and backend verification.
+
+- **Notification Preferences:**  
+  Users can enable or disable notification types (e.g., transaction updates, security alerts).
+
+- **Notifications Inbox:**  
+  A dedicated notifications page displays unread and historical notifications, allowing users to mark them as read.
 
 ---
 
