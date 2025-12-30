@@ -1,6 +1,7 @@
 import type {
   createAccountFormType,
   loginFormType,
+  passwordFormRequest,
   registerFormRequest,
   transactionForm,
 } from "@/types/types";
@@ -32,6 +33,12 @@ export async function doTransaction(formData: transactionForm) {
 
 export async function logoutApi() {
   const data = await axiosInstance.post("/auth/logout");
+
+  return data;
+}
+
+export async function checkPassApi(formData: passwordFormRequest) {
+  const data = await axiosInstance.post("/auth/check-password", formData);
 
   return data;
 }
