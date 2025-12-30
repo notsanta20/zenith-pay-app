@@ -30,15 +30,18 @@ The frontend focuses on **auth correctness, backend-driven onboarding, responsiv
 
 ## 📸 Screenshots
 
-> Add screenshots under `/screenshots` directory.
-
-- Login Page
-- Register Page
-- Create Profile
-- Create Account
-- Dashboard
-- Profile & Settings
-
+<div align="center">
+    <h4 align="center">Dashboard</h4>
+    <img src="./screenshots/dashboard.png" alt="dashboard">
+    <h4 align="center">Transfer</h4>
+    <img src="./screenshots/transfer.png" alt="transfer">
+    <h4 align="center">Transactions</h4>
+    <img src="./screenshots/transactions.png" alt="transactions">
+    <h4 align="center">Accounts</h4>
+    <img src="./screenshots/accounts.png" alt="accounts">
+    <h4 align="center">Profile & Settings</h4>
+    <img src="./screenshots/profile.png" alt="profile & settings">
+</div>
 ---
 
 ## 🔐 Authentication Flow
