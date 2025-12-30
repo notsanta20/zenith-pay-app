@@ -111,7 +111,7 @@ export interface updatePasswordFormType {
   confirmPassword: string;
 }
 
-export interface updatePasswordFormRequest {
+export interface passwordFormRequest {
   password: string;
 }
 

@@ -1,7 +1,4 @@
-import type {
-  updatePasswordFormRequest,
-  userProfileFormType,
-} from "@/types/types";
+import type { passwordFormRequest, userProfileFormType } from "@/types/types";
 import { axiosInstance } from "./apiConfig";
 
 export async function updateUserProfileApi(formData: userProfileFormType) {
@@ -10,7 +7,7 @@ export async function updateUserProfileApi(formData: userProfileFormType) {
   return data;
 }
 
-export async function updatePassApi(formData: updatePasswordFormRequest) {
+export async function updatePassApi(formData: passwordFormRequest) {
   const data = await axiosInstance.put("/auth/update-password", formData);
 
   return data;

@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import useLogout from "@/hooks/useLogout";
 import { updatePassowrdFormSchema } from "@/schemas/formSchemas";
-import type { updatePasswordFormRequest } from "@/types/types";
+import type { passwordFormRequest } from "@/types/types";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -33,7 +33,7 @@ export default function SecurityTab() {
 
   const updatePassQuery = useMutation({
     mutationKey: ["update-pass"],
-    mutationFn: (data: updatePasswordFormRequest) => {
+    mutationFn: (data: passwordFormRequest) => {
       return updatePassApi(data);
     },
     onError: (error) => {
@@ -64,7 +64,7 @@ export default function SecurityTab() {
       onSubmit: updatePassowrdFormSchema,
     },
     onSubmit: async ({ value }) => {
-      const data: updatePasswordFormRequest = {
+      const data: passwordFormRequest = {
         password: value.password,
       };
       updatePassQuery.mutate(data);
