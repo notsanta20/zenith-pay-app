@@ -34,7 +34,7 @@ export default function Notification() {
 
   if (!allNotifications) {
     return (
-      <section className="flex justify-center items-center h-screen">
+      <section className="flex justify-center items-center h-full">
         <h1>loading....</h1>
       </section>
     );
