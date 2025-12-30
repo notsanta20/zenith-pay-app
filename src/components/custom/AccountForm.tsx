@@ -31,8 +31,10 @@ import type { createAccountFormType } from "@/types/types";
 import { Spinner } from "../ui/spinner";
 import { createAccountApi } from "@/apis/postRequests";
 import { AxiosError } from "axios";
+import { useState } from "react";
 
 export function AccountForm() {
+  const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -49,10 +51,13 @@ export function AccountForm() {
       }
     },
     onSuccess: () => {
-      queryClient.refetchQueries({
-        queryKey: ["user-bootstrap"],
-      });
-      navigate("/app", { replace: true });
+      setLoading(true);
+      setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: ["user-bootstrap"],
+        });
+        navigate("/app", { replace: true });
+      }, 1500);
     },
   });
 
@@ -197,7 +202,11 @@ export function AccountForm() {
       <CardFooter>
         <Field>
           <Button type="submit" form="create-account-form">
-            {userProfileQuery.isPending ? <Spinner /> : "Create account"}
+            {userProfileQuery.isPending || isLoading ? (
+              <Spinner />
+            ) : (
+              "Create account"
+            )}
           </Button>
         </Field>
       </CardFooter>

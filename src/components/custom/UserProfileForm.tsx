@@ -34,6 +34,7 @@ import { AxiosError } from "axios";
 
 export function UserProfileForm() {
   const [open, setOpen] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -50,10 +51,13 @@ export function UserProfileForm() {
       }
     },
     onSuccess: () => {
-      queryClient.refetchQueries({
-        queryKey: ["user-bootstrap"],
-      });
-      navigate("/create-account", { replace: true });
+      setLoading(true);
+      setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: ["user-bootstrap"],
+        });
+        navigate("/create-account", { replace: true });
+      }, 1500);
     },
   });
 
@@ -195,7 +199,11 @@ export function UserProfileForm() {
       <CardFooter>
         <Field>
           <Button type="submit" form="user-profile-form">
-            {userProfileQuery.isPending ? <Spinner /> : "Create profile"}
+            {userProfileQuery.isPending || isLoading ? (
+              <Spinner />
+            ) : (
+              "Create profile"
+            )}
           </Button>
         </Field>
       </CardFooter>
