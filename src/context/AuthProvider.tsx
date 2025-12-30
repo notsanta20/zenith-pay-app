@@ -62,19 +62,17 @@ export default function AuthProvider({ children }: AuthProviderProps) {
 
   const isLoading: boolean = verifyUser.isLoading || userBootstrap.isLoading;
 
-  let onBoard: string = onBoardType.login;
+  const onBoard: string = useMemo(() => {
+    if (!userBootstrap.isSuccess) return onBoardType.login;
 
-  if (userBootstrap.isSuccess) {
-    const onBoardRes = userBootstrap.data?.data;
+    const onBoardRes = userBootstrap.data.data;
 
-    onBoard = (() => {
-      if (!onBoardRes.active) return onBoardType.profile;
-      if (!onBoardRes.kycStatus || onBoardRes.accountCount == 0)
-        return onBoardType.account;
+    if (!onBoardRes.active) return onBoardType.profile;
+    if (!onBoardRes.kycStatus || onBoardRes.accountCount == 0)
+      return onBoardType.account;
 
-      return onBoardType.app;
-    })();
-  }
+    return onBoardType.app;
+  }, [userBootstrap.isSuccess, userBootstrap.data]);
 
   let username: string | null = null;
   let lastLogin: string | null = null;
