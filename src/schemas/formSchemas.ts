@@ -67,7 +67,7 @@ export const createAccountFormSchema = z.object({
     .min(3, { error: "account name must be at least 3 characters" })
     .max(15, { error: "account name must not exceed 15 characters" }),
   accountType: accountTypeEnum,
-  balance: z.coerce
+  balance: z
     .number({ error: "enter valid balance" })
     .nonnegative({ error: "Balance should not be negative" })
     .min(1, { error: "balance need to be atleast 1" }),
@@ -89,7 +89,7 @@ export const transactionFormSchema = z.object({
     .string({ error: "enter bank name" })
     .min(3, { error: "account name must be at least 3 characters" })
     .max(15, { error: "account name must not exceed 15 characters" }),
-  amount: z.coerce
+  amount: z
     .number({ error: "enter valid balance" })
     .nonnegative({ error: "Balance should not be negative" })
     .min(1, { error: "balance need to be atleast 1" }),
