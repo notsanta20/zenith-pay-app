@@ -1,4 +1,5 @@
 import { getUserProfile } from "@/apis/getRequests";
+import { checkPassApi } from "@/apis/postRequests";
 import { updateUserProfileApi } from "@/apis/putRequests";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -24,6 +25,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { userProfileUpdateFormSchema } from "@/schemas/formSchemas";
 import type {
+  passwordFormRequest,
   userProfile,
   userProfileFormType,
   userProfileUpdateFormType,
@@ -49,6 +51,13 @@ export default function PersonalTab() {
 
   const userData: userProfile = getProfile.data?.data;
 
+  const checkPasswordQuery = useMutation({
+    mutationKey: ["check-password"],
+    mutationFn: (data: passwordFormRequest) => {
+      return checkPassApi(data);
+    },
+  });
+
   const userProfileQuery = useMutation({
     mutationKey: ["set-user-profile"],
     mutationFn: (data: userProfileFormType) => {
@@ -65,6 +74,7 @@ export default function PersonalTab() {
       queryClient.refetchQueries({
         queryKey: ["verify-user"],
       });
+      toast.success("profile updated successfully");
     },
   });
 
@@ -81,15 +91,25 @@ export default function PersonalTab() {
       onSubmit: userProfileUpdateFormSchema,
     },
     onSubmit: async ({ value }) => {
-      if (value.dob) {
-        const data: userProfileUpdateFormType = {
-          fullName: value.fullname,
-          dob: format(value.dob, "yyy-MM-dd"),
-          phone: value.phone,
-          password: value.password,
-        };
+      const pass: passwordFormRequest = {
+        password: value.password,
+      };
 
-        userProfileQuery.mutate(data);
+      checkPasswordQuery.mutate(pass);
+
+      if (checkPasswordQuery.isSuccess) {
+        if (value.dob) {
+          const data: userProfileUpdateFormType = {
+            fullName: value.fullname,
+            dob: format(value.dob, "yyy-MM-dd"),
+            phone: value.phone,
+            password: value.password,
+          };
+
+          userProfileQuery.mutate(data);
+        }
+      } else {
+        toast.error("password is not matching.");
       }
     },
   });
@@ -272,7 +292,8 @@ export default function PersonalTab() {
                         form="update-profile-form"
                         disabled={!isChanged}
                       >
-                        {userProfileQuery.isPending ? (
+                        {userProfileQuery.isPending ||
+                        checkPasswordQuery.isPending ? (
                           <Spinner />
                         ) : (
                           "update profile"
