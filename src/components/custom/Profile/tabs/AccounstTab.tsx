@@ -57,23 +57,7 @@ export default function AccounstTab() {
       balance: 0,
     },
     validators: {
-      onSubmit: ({ value }) => {
-        const result = createAccountFormSchema.safeParse(value);
-
-        if (!result.success) {
-          const fieldErrors: Record<string, string[]> = {};
-
-          for (const issue of result.error.issues) {
-            const fieldName = issue.path[0];
-            if (typeof fieldName === "string") {
-              fieldErrors[fieldName] ??= [];
-              fieldErrors[fieldName].push(issue.message);
-            }
-          }
-
-          return fieldErrors;
-        }
-      },
+      onSubmit: createAccountFormSchema,
     },
     onSubmit: async ({ value }) => {
       const data: createAccountFormType = {
@@ -172,7 +156,7 @@ export default function AccounstTab() {
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       onChange={(e) =>
-                        field.handleChange(parseFloat(e.target.value))
+                        field.handleChange(Number(e.target.value))
                       }
                       aria-invalid={isInvalid}
                       placeholder="zenith"

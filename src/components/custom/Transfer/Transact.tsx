@@ -33,7 +33,7 @@ export default function Transact() {
   const [accountDetails, setAccountDetails] = useState<accountDetails>({
     accountNumber: "0000 0000 0000",
     accountStatus: "NILL",
-    balance: 0,
+    balance: "0",
   });
 
   const accountsQuery = useQuery({
@@ -79,23 +79,7 @@ export default function Transact() {
       remarks: "",
     },
     validators: {
-      onSubmit: ({ value }) => {
-        const result = transactionFormSchema.safeParse(value);
-
-        if (!result.success) {
-          const fieldErrors: Record<string, string[]> = {};
-
-          for (const issue of result.error.issues) {
-            const fieldName = issue.path[0];
-            if (typeof fieldName === "string") {
-              fieldErrors[fieldName] ??= [];
-              fieldErrors[fieldName].push(issue.message);
-            }
-          }
-
-          return fieldErrors;
-        }
-      },
+      onSubmit: transactionFormSchema,
     },
     onSubmit: async ({ value }) => {
       const data: transactionForm = {
@@ -116,7 +100,7 @@ export default function Transact() {
     setAccountDetails({
       accountNumber: "0000 0000 0000",
       accountStatus: "NILL",
-      balance: 0,
+      balance: "0",
     });
   }
 
@@ -165,7 +149,7 @@ export default function Transact() {
                                   setAccountDetails({
                                     accountNumber: account.accountNumber,
                                     accountStatus: account.accountStatus,
-                                    balance: parseFloat(amount),
+                                    balance: amount,
                                   });
                                 }
                               }}
@@ -379,7 +363,7 @@ export default function Transact() {
                               value={field.state.value}
                               onBlur={field.handleBlur}
                               onChange={(e) =>
-                                field.handleChange(parseFloat(e.target.value))
+                                field.handleChange(Number(e.target.value))
                               }
                               aria-invalid={isInvalid}
                               placeholder="zenith savings"
