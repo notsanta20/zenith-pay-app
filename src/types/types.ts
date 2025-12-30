@@ -60,7 +60,7 @@ export interface transactAccount {
 export interface accountDetails {
   accountNumber: string;
   accountStatus: string;
-  balance: number;
+  balance: string;
 }
 
 export interface account {
