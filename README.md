@@ -1,30 +1,23 @@
-# 🖥️ Zenith Pay – Frontend
+# Zenith Pay – Frontend
 
 ![React](https://img.shields.io/badge/React-18-blue?logo=react)
 ![Vite](https://img.shields.io/badge/Vite-Build%20Tool-purple?logo=vite)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?logo=typescript)
 ![Tailwind](https://img.shields.io/badge/TailwindCSS-Utility--First-38bdf8?logo=tailwindcss)
 
----
-
-## 🏗️ Overview
+## Overview
 
 The **Zenith Pay Frontend** is a **secure React single-page application** designed to interact with the Zenith Pay backend through an API Gateway.
 
 The frontend focuses on **auth correctness, backend-driven onboarding, responsive design, and predictable server-state management**.
 
----
-
-## 🔗 Backend Repository
+## Backend Repository
 
 The frontend consumes APIs exposed by the **Zenith Pay Backend**, which is built using Spring Boot microservices and secured via an API Gateway.
 
-👉 **Backend Repository:**  
-https://github.com/notsanta20/zenith-pay
+**Backend Repository:** https://github.com/notsanta20/zenith-pay
 
----
-
-## ⚙️ Tech Stack
+## Tech Stack
 
 - **Frontend:** React, TypeScript
 - **Build Tool:** Vite
@@ -35,9 +28,7 @@ https://github.com/notsanta20/zenith-pay
 - **Forms & Validation:** TanStack Form, Zod
 - **HTTP Client:** Axios
 
----
-
-## 📸 Screenshots
+## Screenshots
 
 <div align="center">
     <h4 align="center">Dashboard</h4>
@@ -51,18 +42,15 @@ https://github.com/notsanta20/zenith-pay
     <h4 align="center">Profile & Settings</h4>
     <img src="./screenshots/profile.png" alt="profile & settings">
 </div>
----
 
-## 🔐 Authentication Flow
+## Authentication Flow
 
 - JWT stored in **HttpOnly cookies**
 - No token stored in localStorage or sessionStorage
 - Auth state derived from backend using `verify-user` API
 - Logout clears cookies via backend API
 
----
-
-## 🧭 Routing & Onboarding
+## Routing & Onboarding
 
 Routing is **state-driven** based on backend bootstrap data:
 
@@ -77,9 +65,7 @@ Public routes:
 
 All other routes are protected.
 
----
-
-## 👤 Profile, Security & Notifications
+## Profile, Security & Notifications
 
 - **Profile Management:**  
   Users can view and update profile details such as name and contact information.
@@ -93,9 +79,7 @@ All other routes are protected.
 - **Notifications Inbox:**  
   A dedicated notifications page displays unread and historical notifications, allowing users to mark them as read.
 
----
-
-## 📱 Responsive Design
+## Responsive Design
 
 - Mobile-first UI design
 - Tailwind CSS responsive utilities
@@ -104,9 +88,7 @@ All other routes are protected.
   - Tablet
   - Desktop
 
----
-
-## ⚙️ Environment Configuration
+## Environment Configuration
 
 The frontend is environment-driven.
 
@@ -116,9 +98,7 @@ The frontend is environment-driven.
 VITE_BACKEND_SERVER_URL="http://gateway-host:8089"
 ```
 
----
-
-## 🚀 Start service
+## Start service
 
 ```
 npm install
